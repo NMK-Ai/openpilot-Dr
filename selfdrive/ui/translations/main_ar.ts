@@ -223,7 +223,7 @@ Reboot required.</source>
     </message>
     <message>
         <source>Enabling this will block alc for all the car&apos;s that has stock factor BSM that openpilot currently do not support. (Prius TSS2 and Rav4 TSS1 has been fully tested and working) but also allow&apos;s your toyota/lexus see more object&apos;s.</source>
-        <translation>تفعيل هذا سيمنع الـ alc لجميع السيارات التي تحتوي على نظام BSM المصنعي الأساسي الذي لا يدعمه حاليًا openpilot. (تم اختبار Prius TSS2 و Rav4 TSS1 بالكامل وهي تعمل) ولكنه أيضًا يتيح لسيارتك تويوتا/لكزس رؤية المزيد من الأشياء.</translation>
+        <translation>تفعيل هذا سيمنع الـ alc لجميع السيارات التي تحتوي على نظام BSM المصنعي الأساسي الذي لا يدعمه حاليًا القائد الآلي. (تم اختبار Prius TSS2 و Rav4 TSS1 بالكامل وهي تعمل) ولكنه أيضًا يتيح لسيارتك تويوتا/لكزس رؤية المزيد من الأشياء.</translation>
     </message>
     <message>
         <source>Turn it on at your own risk, user is responsible to pay attention at all time.
@@ -954,7 +954,7 @@ Please note:
     <message>
         <source>Display Driver Monitor Indicator</source>
         <translatorcomment>عرض مؤشر مراقب السائق.</translatorcomment>
-        <translation>Display Driver Monitor Indicator</translation>
+        <translation>عرض مؤشر مراقبة السائق</translation>
     </message>
     <message>
         <source>Enable this to display the icon.</source>
@@ -1243,7 +1243,7 @@ Off: The device will not emit any sound.</source>
     <name>ExperimentalModeButton</name>
     <message>
         <source>EXPERIMENTAL MODE ON</source>
-        <translation type="vanished">實驗模式 ON</translation>
+        <translation type="vanished">تفعيل الوضع التجريبي ON</translation>
     </message>
     <message>
         <source>CHILL MODE ON</source>
@@ -1525,11 +1525,11 @@ Off: The device will not emit any sound.</source>
     </message>
     <message>
         <source>dashcam</source>
-        <translation type="vanished">行車記錄器</translation>
+        <translation type="vanished">داش كام</translation>
     </message>
     <message>
         <source>openpilot</source>
-        <translation type="vanished">openpilot</translation>
+        <translation type="vanished">القائد الآلي</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -1626,7 +1626,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Software</source>
-        <translation>اابرنامج</translation>
+        <translation>البرنامج</translation>
     </message>
     <message>
         <source>BACK</source>
@@ -1882,7 +1882,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Uninstall %1</source>
-        <translation>يتم الالغاء %1</translation>
+        <translation>يتم الغاء القائد الآلي</translation>
     </message>
     <message>
         <source>Are you sure you want to uninstall?</source>
@@ -2091,7 +2091,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>On this car, openpilot defaults to the car&apos;s built-in ACC instead of openpilot&apos;s longitudinal control. Enable this to switch to openpilot longitudinal control. Enabling Experimental mode is recommended when enabling openpilot longitudinal control alpha.</source>
-        <translation>على هذه السيارة، يعتمد القائد الآلي افتراضيًا على ACC المدمج في السيارة بدلاً من التحكم الطولي لـ openpilot. قم بتفعيل هذا الخيار للتبديل إلى التحكم الطولي لـقائد الآلي يوصى بتفعيل وضع التجريبي عند تفعيل التحكم الطولي الألفا للقائد الآلي</translation>
+        <translation>على هذه السيارة، يعتمد القائد الآلي افتراضيًا على ACC المدمج في السيارة بدلاً من التحكم الطولي لـ القائد الآلي. قم بتفعيل هذا الخيار للتبديل إلى التحكم الطولي لـقائد الآلي يوصى بتفعيل وضع التجريبي عند تفعيل التحكم الطولي الألفا للقائد الآلي</translation>
     </message>
     <message>
         <source>Aggressive</source>
