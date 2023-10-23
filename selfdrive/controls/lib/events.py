@@ -383,7 +383,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.startupNoFw: {
     ET.PERMANENT: StartupAlert(_("لم يتم التعرف على السيارة"),
-                               _("افحص منفذ الطاقة والاتصال بالسيارة")),
+                               _("افحص منفذ الطاقة والاتصال بالسيارة"),
                                alert_status=AlertStatus.userPrompt),
   },
 
@@ -406,7 +406,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # See https://github.com/commaai/openpilot/wiki/Fingerprinting for more information
   EventName.carUnrecognized: {
     ET.PERMANENT: NormalPermanentAlert(_("وضع الداشكام"),
-                                       _("السيارة غير معروفة")),
+                                       _("السيارة غير معروفة"),
                                        priority=Priority.LOWEST),
   },
 
