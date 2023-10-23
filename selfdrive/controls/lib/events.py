@@ -667,28 +667,23 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
       Priority.LOWEST, VisualAlert.none, AudibleAlert.none, .1),
   },
 
-  EventName.wrongCarMode: {
+EventName.wrongCarMode: {
     ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
     ET.NO_ENTRY: wrong_car_mode_alert,
   },
 
   EventName.resumeBlocked: {
-    ET.NO_ENTRY: NoEntryAlert("اضغط على 'تعيين' للتشغيل"),
+    ET.NO_ENTRY: NoEntryAlert("اضغط على تثبيت للتفعيل"),
   },
 
   EventName.wrongCruiseMode: {
     ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert(_("نظام المثبت السرعة التكيفي معطل")),
+    ET.NO_ENTRY: NoEntryAlert(_("تم تعطيل مثبت السرعة")),
   },
 
   EventName.steerTempUnavailable: {
     ET.SOFT_DISABLE: soft_disable_alert(_("التوجيه غير متاح مؤقتًا")),
-    ET.NO_ENTRY: NoEntryAlert(_("وظيفة التوجيه غير متوفرة مؤقتًا")),
-  },
-
-  EventName.steerTimeLimit: {
-    ET.SOFT_DISABLE: soft_disable_alert("حد زمني لتوجيه السيارة"),
-    ET.NO_ENTRY: NoEntryAlert("حد الوقت لتوجيه السيارة"),
+    ET.NO_ENTRY: NoEntryAlert(_("التوجيه غير متاح مؤقتًا")),
   },
 
   EventName.outOfSpace: {
