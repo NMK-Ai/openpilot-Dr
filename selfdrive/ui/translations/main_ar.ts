@@ -1633,6 +1633,11 @@ This may take up to a minute.</source>
         <translation>الخلف</translation>
     </message>
     <message>
+        <source>Navigation</source>
+        <translation>الخرائط</translation>
+    </message>
+    <message>
+    <message>
         <source>DP - General</source>
         <translation>NMK-عام</translation>
     </message>
