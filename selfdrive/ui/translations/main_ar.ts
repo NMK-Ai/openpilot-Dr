@@ -1074,7 +1074,7 @@ Off: The device will not emit any sound.</source>
     </message>
     <message>
         <source>N/A</source>
-        <translation>غ/م</translation>
+        <translation>الجيل الثاني</translation>
     </message>
     <message>
         <source>Serial</source>
