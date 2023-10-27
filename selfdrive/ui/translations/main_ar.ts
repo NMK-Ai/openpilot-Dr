@@ -2049,6 +2049,14 @@ This may take up to a minute.</source>
         <source>Experimental Mode</source>
         <translation>الوضع التجريبي</translation>
     </message>
+        <massage>
+        <Source>Expertiemental openpilot Longitudinal Control</source>
+        <translation>التحكم الطولي من البداية إلى النهاية في القائد الآلي التجريبي</translation>
+    </massage>
+    <massage>
+        <source>Enable Right-Hand Drive</source>
+        <translation>تمكين القيادة على اليمين</translation>
+    </massage>
     <message>
         <source>openpilot defaults to driving in &lt;b&gt;chill mode&lt;/b&gt;. Experimental mode enables &lt;b&gt;alpha-level features&lt;/b&gt; that aren&apos;t ready for chill mode. Experimental features are listed below:</source>
         <translation>يُفترض أن القائد الآلي يعمل بوضع &quot;السواقة الهادئة&quot; افتراضيًا. وضع التجربة يمكن أن يُمكّن ميزات على مستوى &quot;ألفا&quot; التي ليست جاهزة لوضع السواقة الهادئة. إليك بعض ميزات التجربة:
