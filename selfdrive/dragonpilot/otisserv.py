@@ -196,7 +196,7 @@ class OtisServ(BaseHTTPRequestHandler):
     self.send_response(200)
     self.send_header('Content-type','image/png')
     self.end_headers()
-    f = open("%s/selfdrive/assets/img_spinner_comma.png" % BASEDIR, "rb")
+    f = open("%s/selfdrive/assets/img_spinner_nmk.png" % BASEDIR, "rb")
     self.wfile.write(f.read())
     f.close()
 
