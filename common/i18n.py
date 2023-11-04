@@ -18,7 +18,7 @@ def events():
     if locale is not None:
       locale = supported_languages[locale.strip()]
     else:
-      locale = "ar-SA"
+      locale = "en-US"
   except KeyError:
     locale = "en-US"
   i18n = gettext.translation("events", localedir=locale_dir, fallback=True, languages=[locale])
