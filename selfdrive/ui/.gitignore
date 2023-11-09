@@ -7,7 +7,6 @@ _mui
 watch3
 installer/installers/*
 qt/text
-qt/spinner
 qt/setup/setup
 qt/setup/reset
 qt/setup/wifi
