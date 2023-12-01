@@ -17,7 +17,7 @@ OSM_DB_STAMP_REMOTE = "https://sunnypilot-osm.s3.us-east-2.amazonaws.com/osm-db/
 def get_current_s3_osm_db_timestamp():
   try:
     local_osm_db_name = Params().get("OsmLocationName", encoding="utf8")
-    req = Request(url=f"{OSM_DB_STAMP_REMOTE}/{local_osm_db_name}.txt", headers={"User-Agent": f"dragonpilot-{get_version()}"})
+    req = Request(url=f"{OSM_DB_STAMP_REMOTE}/{local_osm_db_name}.txt", headers={"User-Agent": f"NMK-{get_version()}"})
     r = urlopen(req)
     if r.status != 200:
       print(f'Failed to fetch timestamp for S3 OSM db.\n\n{r.status}')
