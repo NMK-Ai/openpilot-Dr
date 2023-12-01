@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>dragonpilot</title>
+  <title>NMK</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <!-- UIkit CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.2/dist/css/uikit.min.css" />
