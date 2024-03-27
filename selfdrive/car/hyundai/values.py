@@ -1487,6 +1487,8 @@ FW_VERSIONS = {
     ],
     (Ecu.abs, 0x7d1, None): [
       b'\xf1\x00CN ESC \t 101 \x10\x03 58910-AB800',
+      b'\xf1\x00CN ESC \r 105 \x10\x03 58910-AA800',
+      b'\xf1\x8758910-AA800\xf1\x00CN ESC \r 105 \x10\x03 58910-AA800',
       b'\xf1\x8758910-AA800\xf1\x00CN ESC \t 104 \x08\x03 58910-AA800',
       b'\xf1\x8758910-AA800\xf1\x00CN ESC \t 105 \x10\x03 58910-AA800',
       b'\xf1\x8758910-AB800\xf1\x00CN ESC \t 101 \x10\x03 58910-AB800\xf1\xa01.01',
@@ -1502,8 +1504,11 @@ FW_VERSIONS = {
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x82CNCWD0AMFCXCSFFA',
+      b'\xf1\x82CNCWD0AMFCXCSFFB',
       b'\xf1\x81HM6M2_0a0_FF0',
       b'\xf1\x82CNCVD0AMFCXCSFFB',
+      b'\xf1\x82MCN70M40AQ700C01',
+      b'\xf1\x870\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf1\x82CNDWD0AMFCXCSG8A',
       b'\xf1\x870\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf1\x81HM6M2_0a0_G80',
       b'\xf1\x870\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf1\x81HM6M2_0a0_HC0',
     ],
