@@ -1170,6 +1170,7 @@ FW_VERSIONS = {
     (Ecu.fwdCamera, 0x7C4, None): [
       b'\xf1\x00BD  LKAS AT USA LHD 1.00 1.04 95740-M6000 J33',
       b'\xf1\x00BDP LKAS AT USA LHD 1.00 1.05 99211-M6500 744',
+      b'\xf1\x00BDP LKAS AT KOR LHD 1.00 1.02 99211-M6500 741',
     ],
     (Ecu.fwdRadar, 0x7D0, None): [
       b'\xf1\x00BDPE_SCC FHCUPC     1.00 1.04 99110-M6500\x00\x00\x00\x00\x00\x00\x00\x00\x00',
@@ -1184,6 +1185,7 @@ FW_VERSIONS = {
       b'\xf1\x00\x00\x00\x00\x00\x00\x00',
       b'\xf1\x816VGRAH00018.ELF\xf1\x00\x00\x00\x00\x00\x00\x00',
       b'\xf1\x8758900-M7AB0 \xf1\x816VQRAD00127.ELF\xf1\x00\x00\x00\x00\x00\x00\x00',
+      b'\xf1\x8758900-M6250 \xf1\x816VORAC00029.ELF\xf1\x00\x00\x00\x00\x00\x00\x00',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xf1\x006V2B0_C2\x00\x006V2C6051\x00\x00CBD0N20NL1\x00\x00\x00\x00',
