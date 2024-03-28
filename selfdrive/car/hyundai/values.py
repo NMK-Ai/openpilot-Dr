@@ -1162,6 +1162,7 @@ FW_VERSIONS = {
     (Ecu.eps, 0x7D4, None): [
       b'\xf1\x00BD  MDPS C 1.00 1.02 56310-XX000 4BD2C102',
       b'\xf1\x00BD  MDPS C 1.00 1.08 56310/M6300 4BDDC108',
+      b'\xf1\x00BD  MDPS C 1.00 1.01 56310/M6800 4BPDC101',
       b'\xf1\x00BD  MDPS C 1.00 1.08 56310M6300\x00 4BDDC108',
       b'\xf1\x00BDm MDPS C A.01 1.01 56310M7800\x00 4BPMC101',
       b'\xf1\x00BDm MDPS C A.01 1.03 56310M7800\x00 4BPMC103',
@@ -1179,6 +1180,7 @@ FW_VERSIONS = {
     (Ecu.engine, 0x7e0, None): [
       b'\x01TBDM1NU06F200H01',
       b'391182B945\x00',
+      b'\xf1\x87391002M480',
       b'\xf1\x81616F2051\x00\x00\x00\x00\x00\x00\x00\x00',
     ],
     (Ecu.abs, 0x7d1, None): [
@@ -1192,6 +1194,8 @@ FW_VERSIONS = {
       b'\xf1\x006V2B0_C2\x00\x006V2C6051\x00\x00CBD0N20NL1\x90@\xc6\xae',
       b'\xf1\x816U2VC051\x00\x00\xf1\x006U2V0_C2\x00\x006U2VC051\x00\x00DBD0T16SS0\x00\x00\x00\x00',
       b"\xf1\x816U2VC051\x00\x00\xf1\x006U2V0_C2\x00\x006U2VC051\x00\x00DBD0T16SS0\xcf\x1e'\xc3",
+      b'\xf1\x00PSBG1233  B39000\x00\x00\x00\x00CBD0M16KL0I\xd6\x19|',
+      b'\xf1\x87CXMTA42750332JE0V\xb9\x89\x98wwfvw\x87\x86xf\x87\x87xwz\x8f\xffy\xff\xff\xff~7\xf1\x81B39000\x00\x00\x00\x00\xf1\x00PSBG1233  B39000\x00\x00\x00\x00CBD0M16KL0I\xd6\x19|',
       b'\xf1\x87CXNQAM5799135JB0wV\x84h\xdcwuw\xbbVsgw\x88w\x89hv\x7f\xff\x8b\xff\xff\xff\x9f=\xf1\x816V2C6051\x00\x00\xf1\x006V2B0_C2\x00\x006V2C6051\x00\x00CBD0N20NL1\x00\x00\x00\x00',
       b'\xf1\x87CXNQAM5799135JB0wV\x84h\xdcwuw\xbbVsgw\x88w\x89hv\x7f\xff\x8b\xff\xff\xff\x9f=\xf1\x816V2C6051\x00\x00\xf1\x006V2B0_C2\x00\x006V2C6051\x00\x00CBD0N20NL1\x90@\xc6\xae',
     ],
