@@ -740,7 +740,6 @@ FW_VERSIONS = {
   CAR.SANTA_FE: {
     (Ecu.fwdRadar, 0x7d0, None): [
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.00 99110-S1210         ',
-      b'\xf1\x00TM  MFC  AT KOR LHD 1.00 1.00 99211-S1010 180412',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.01 99110-S2000         ',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.02 99110-S2000         ',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.03 99110-S2000         ',
@@ -751,6 +750,7 @@ FW_VERSIONS = {
       b'\xf1\x00TM ESC \r 103\x18\x11\x08 58910-S2650',
       b'\xf1\x00TM ESC \r 104\x19\x07\x08 58910-S2650',
       b'\xf1\x00TM ESC \x02 100\x18\x030 58910-S2600',
+      b'\xf1\x00TM ESC \x01 103\x18\x06% 58910-S1100',
       b'\xf1\x00TM ESC \x02 102\x18\x07\x01 58910-S2600',
       b'\xf1\x00TM ESC \x02 103\x18\x11\x07 58910-S2600',
       b'\xf1\x00TM ESC \x02 104\x19\x07\x07 58910-S2600',
@@ -766,11 +766,13 @@ FW_VERSIONS = {
       b'\xf1\x00TM  MDPS C 1.00 1.00 56340-S2000 8409',
       b'\xf1\x00TM  MDPS C 1.00 1.00 56340-S2000 8A12',
       b'\xf1\x00TM  MDPS C 1.00 1.01 56340-S2000 9129',
-      b'\xf1\x00TM  MDPS R 1.00 1.02 57700-S1100 4TMDP102'
+      b'\xf1\x00TM  MDPS R 1.00 1.02 57700-S1000 4TMDP102',
+      b'\xf1\x00TM  MDPS R 1.00 1.02 57700-S1100 4TMDP102',
     ],
     (Ecu.fwdCamera, 0x7c4, None): [
       b'\xf1\x00TM  MFC  AT EUR LHD 1.00 1.01 99211-S1010 181207',
       b'\xf1\x00TM  MFC  AT USA LHD 1.00 1.00 99211-S2000 180409',
+      b'\xf1\x00TM  MFC  AT KOR LHD 1.00 1.00 99211-S1010 180412',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xf1\x00bcsh8p54  U833\x00\x00\x00\x00\x00\x00TTM4V22US3_<]\xf1',
@@ -799,6 +801,9 @@ FW_VERSIONS = {
       b'\xf1\x87SDJXAA7656854GG1DEtWUU\x85X\x88\x88\x98\x88w\x88\x87xx\x88\x87\x88\x96o\xfb\xff\x86f\x7f\xff.\xca\xf1\x816W3C2051\x00\x00\xf1\x006W351_C2\x00\x006W3C2051\x00\x00TTM4G24NS2\x00\x00\x00\x00',
       b'\xf1\x87SDJXAA7656854GG1DEtWUU\x85X\x88\x88\x98\x88w\x88\x87xx\x88\x87\x88\x96o\xfb\xff\x86f\x7f\xff.\xca\xf1\x816W3C2051\x00\x00\xf1\x006W351_C2\x00\x006W3C2051\x00\x00TTM4G24NS2K\xdaV0',
       b'\xf1\x87SDKXAA2443414GG1vfvgwv\x87h\x88\x88\x88\x88ww\x87wwwww\x99_\xfc\xffvD?\xffl\xd2\xf1\x816W3E1051\x00\x00\xf1\x006W351_C2\x00\x006W3E1051\x00\x00TTM4G24NS6\x00\x00\x00\x00',
+      b'\xf1\x87LBKSFN301967KF18\x98\x88\x88\x88\x98\x87xw\x8a\xaa\xc8\xaa\x98\x99\x99\x89\x88\x99\xa8\x89eo\xf7\xff\xaa\x99\xaf\xff\xb5d\xf1\x81U821\x00\x00\x00\x00\x00\x00\xf1\x00bcsh8p54  U821\x00\x00\x00\x00\x00\x00TTM2V20KS6$a/\xfe',
+      b'\xf1\x87LBKSFN301967KF18\x98\x88\x88\x88\x98\x87xw\x8a\xaa\xc8\xaa\x98\x99\x99\x89\x88\x99\xa8\x89eo\xf7\xff\xaa\x99\xaf\xff\xb5d\xf1\x89U821\x00\x00\x00\x00\x00\x00\xf1\x82TTM2V20KS6',
+      b'\xf1\x00bcsh8p54  U821\x00\x00\x00\x00\x00\x00TTM2V20KS6$a/\xfe',
     ],
   },
   CAR.SANTA_FE_2022: {
