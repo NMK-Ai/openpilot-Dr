@@ -761,6 +761,7 @@ FW_VERSIONS = {
       b'\xf1\x81606EA051\x00\x00\x00\x00\x00\x00\x00\x00',
       b'\xf1\x81606G1051\x00\x00\x00\x00\x00\x00\x00\x00',
       b'\xf1\x81606G3051\x00\x00\x00\x00\x00\x00\x00\x00',
+      b'\xf1\x8971TMC2NAICDIR004\xf1\x8271TMC2NAICDIR004',
     ],
     (Ecu.eps, 0x7d4, None): [
       b'\xf1\x00TM  MDPS C 1.00 1.00 56340-S2000 8409',
