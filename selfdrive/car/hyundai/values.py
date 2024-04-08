@@ -740,6 +740,7 @@ FW_VERSIONS = {
   CAR.SANTA_FE: {
     (Ecu.fwdRadar, 0x7d0, None): [
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.00 99110-S1210         ',
+      b'\xf1\x00TM  MFC  AT KOR LHD 1.00 1.00 99211-S1010 180412',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.01 99110-S2000         ',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.02 99110-S2000         ',
       b'\xf1\x00TM__ SCC F-CUP      1.00 1.03 99110-S2000         ',
