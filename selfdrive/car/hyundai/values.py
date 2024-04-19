@@ -116,6 +116,8 @@ class CAR:
   KIA_STINGER_2022 = "KIA STINGER 2022"
   KIA_CEED = "KIA CEED INTRO ED 2019"
   KIA_EV6 = "KIA EV6 2022"
+  KIA_FORTE_2021_NON_SCC = "KIA FORTE LXS 2021 NON-SCC"
+
 
   # Genesis
   GENESIS_GV60_EV_1ST_GEN = "GENESIS GV60 ELECTRIC 1ST GEN"
@@ -246,6 +248,8 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
   CAR.GENESIS_GV70_1ST_GEN: HyundaiCarInfo("Genesis GV70 2022-23", "All", harness=Harness.hyundai_l),
   CAR.GENESIS_G80: HyundaiCarInfo("Genesis G80 2018-19", "All", harness=Harness.hyundai_h),
   CAR.GENESIS_G90: HyundaiCarInfo("Genesis G90 2017-18", "All", harness=Harness.hyundai_c),
+  CAR.KIA_FORTE_2021_NON_SCC: HyundaiCarInfo("Kia Forte Non-SCC 2021", "No Smart Cruise Control (SCC)", car_parts=CarParts.common([CarHarness.hyundai_g])),
+
 }
 
 class Buttons:
@@ -1630,6 +1634,23 @@ FW_VERSIONS = {
       b'\xf1\x00CV1 MFC  AT KOR LHD 1.00 1.06 99210-CV000 220328',
     ],
   },
+  CAR.KIA_FORTE_2021_NON_SCC: {
+    (Ecu.eps, 0x7D4, None): [
+      b'\xf1\x00BD  MDPS C 1.00 1.08 56310M6000\x00 4BDDC108',
+    ],
+    (Ecu.fwdCamera, 0x7C4, None): [
+      b'\xf1\x00BD  LKAS AT USA LHD 1.00 1.04 95740-M6000 J33',
+    ],
+    (Ecu.engine, 0x7e0, None): [
+      b'\xf1\x81616B6051\x00\x00\x00\x00\x00\x00\x00\x00',
+    ],
+    (Ecu.abs, 0x7d1, None): [
+      b'\xf1\x816VFRAL00010.ELF\xf1\x00\x00\x00\x00\x00\x00\x00',
+    ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x87CXLQAM0906975JB0\x89\x88\xa6\x8aVfug\xba\x87\x94yffuxgfo\xff\x8b\xff\xff\xff\x91\x82\xf1\x816V2C1051\x00\x00\xf1\x006V2B0_C2\x00\x006V2C1051\x00\x00CBD0N20NS8q\xc1&\xd2',
+    ],
+  },  
   CAR.IONIQ_5: {
     (Ecu.fwdRadar, 0x7d0, None): [
       b'\xf1\x00NE1_ RDR -----      1.00 1.00 99110-GI000         ',
@@ -1758,6 +1779,8 @@ EV_CAR = {CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.KIA_NIRO_EV, CAR
 # these cars require a special panda safety mode due to missing counters and checksums in the messages
 LEGACY_SAFETY_MODE_CAR = {CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ_PHEV, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF, CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.VELOSTER,
                           CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.KIA_CEED, CAR.ELANTRA, CAR.IONIQ_HEV_2022}
+NON_SCC_CAR = {CAR.KIA_FORTE_2021_NON_SCC, CAR.ELANTRA_2022_NON_SCC, CAR.KIA_FORTE_2019_NON_SCC, CAR.GENESIS_G70_2021_NON_SCC,
+               CAR.KIA_SELTOS_2023_NON_SCC, CAR.KONA_NON_SCC}
 
 # If 0x500 is present on bus 1 it probably has a Mando radar outputting radar points.
 # If no points are outputted by default it might be possible to turn it on using  selfdrive/debug/hyundai_enable_radar_points.py
@@ -1789,6 +1812,7 @@ DBC = {
   CAR.KIA_SORENTO: dbc_dict('hyundai_kia_generic', None), # Has 0x5XX messages, but different format
   CAR.KIA_STINGER: dbc_dict('hyundai_kia_generic', None),
   CAR.KIA_STINGER_2022: dbc_dict('hyundai_kia_generic', None),
+  CAR.KIA_FORTE_2021_NON_SCC: dbc_dict('hyundai_kia_generic', None),
   CAR.KONA: dbc_dict('hyundai_kia_generic', None),
   CAR.KONA_EV: dbc_dict('hyundai_kia_generic', None),
   CAR.KONA_EV_2022: dbc_dict('hyundai_kia_generic', None),
