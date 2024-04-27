@@ -97,6 +97,8 @@ class CAR:
 
   # Kia
   KIA_FORTE = "KIA FORTE E 2018 & GT 2021"
+  KIA_FORTE_2021_NON_SCC = "KIA FORTE LXS 2021 NON-SCC"
+  KIA_FORTE_2019_NON_SCC = "KIA FORTE 2019 NON-SCC"
   KIA_K5_2021 = "KIA K5 2021"
   KIA_K5_HEV_2020 = "KIA K5 HYBRID 2020"
   KIA_NIRO_EV = "KIA NIRO EV 2020"
@@ -116,7 +118,6 @@ class CAR:
   KIA_STINGER_2022 = "KIA STINGER 2022"
   KIA_CEED = "KIA CEED INTRO ED 2019"
   KIA_EV6 = "KIA EV6 2022"
-  KIA_FORTE_2021_NON_SCC = "KIA FORTE LXS 2021 NON-SCC"
 
 
   # Genesis
@@ -1651,6 +1652,23 @@ FW_VERSIONS = {
       b'\xf1\x87CXLQAM0906975JB0\x89\x88\xa6\x8aVfug\xba\x87\x94yffuxgfo\xff\x8b\xff\xff\xff\x91\x82\xf1\x816V2C1051\x00\x00\xf1\x006V2B0_C2\x00\x006V2C1051\x00\x00CBD0N20NS8q\xc1&\xd2',
     ],
   },  
+  CAR.KIA_FORTE_2019_NON_SCC: {
+    (Ecu.eps, 0x7D4, None): [
+      b'\xf1\x00BD  MDPS C 1.00 1.04 56310/M6000 4BDDC104',
+    ],
+    (Ecu.fwdCamera, 0x7C4, None): [
+      b'\xf1\x00BD  LKAS AT USA LHD 1.00 1.02 95740-M6000 J31',
+    ],
+    (Ecu.engine, 0x7e0, None): [
+      b'\xf1\x81616B5051\x00\x00\x00\x00\x00\x00\x00\x00',
+    ],
+    (Ecu.abs, 0x7d1, None): [
+      b'\xf1\x816VFRAF00018.ELF\xf1\x00\x00\x00\x00\x00\x00\x00',
+    ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x87CXJQAM4966515JB0x\xa9\x98\x9b\x99fff\x98feg\x88\x88w\x88Ff\x8f\xff{\xff\xff\xff\xa8\xf6\xf1\x816V2C1051\x00\x00\xf1\x006V2B0_C2\x00\x006V2C1051\x00\x00CBD0N20NS8q\xc1&\xd2',
+    ],
+  },
   CAR.IONIQ_5: {
     (Ecu.fwdRadar, 0x7d0, None): [
       b'\xf1\x00NE1_ RDR -----      1.00 1.00 99110-GI000         ',
