@@ -184,7 +184,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.9
       ret.steerRatio = 16.
       tire_stiffness_factor = 0.65
-    elif candidate in (CAR.KIA_FORTE, CAR. KIA_FORTE_2019_NON_SCC, CAR.KIA_FORTE_2021_NON_SCC):
+    elif candidate in (CAR.KIA_FORTE, CAR.KIA_FORTE_2019_NON_SCC, CAR.KIA_FORTE_2021_NON_SCC):
       ret.mass = 2878. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       ret.steerRatio = 13.75
