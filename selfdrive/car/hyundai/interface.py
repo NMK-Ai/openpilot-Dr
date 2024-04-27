@@ -164,11 +164,11 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1825. + STD_CARGO_KG
       ret.wheelbase = 2.78
       ret.steerRatio = 14.4 * 1.15   # 15% higher at the center seems reasonable
-    elif candidate == CAR.KIA_FORTE:
+'''    elif candidate == CAR.KIA_FORTE:
       ret.mass = 3558. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       ret.steerRatio = 13.75
-      tire_stiffness_factor = 0.5
+      tire_stiffness_factor = 0.5'''
     elif candidate == CAR.KIA_CEED:
       ret.mass = 1450. + STD_CARGO_KG
       ret.wheelbase = 2.65
