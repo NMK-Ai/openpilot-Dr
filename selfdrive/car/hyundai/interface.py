@@ -171,7 +171,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 2878. * CV.LB_TO_KG
       ret.wheelbase = 2.80
       ret.steerRatio = 13.75
-      ret.tireStiffnessFactor = 0.5
+      tire_stiffness_factor = 0.5
     elif candidate == CAR.KIA_CEED:
       ret.mass = 1450. + STD_CARGO_KG
       ret.wheelbase = 2.65
