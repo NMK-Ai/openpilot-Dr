@@ -1157,10 +1157,23 @@ FW_VERSIONS = {
     ],
   },
   CAR.GENESIS_G90: {
-    (Ecu.transmission, 0x7e1, None): [b'\xf1\x87VDGMD15866192DD3x\x88x\x89wuFvvfUf\x88vWwgwwwvfVgx\x87o\xff\xbc^\xf1\x81E14\x00\x00\x00\x00\x00\x00\x00\xf1\x00bcshcm49  E14\x00\x00\x00\x00\x00\x00\x00SHI0G50NB1tc5\xb7'],
-    (Ecu.fwdRadar, 0x7d0, None): [b'\xf1\x00HI__ SCC F-CUP      1.00 1.01 96400-D2100         '],
-    (Ecu.fwdCamera, 0x7c4, None): [b'\xf1\x00HI  LKAS AT USA LHD 1.00 1.00 95895-D2020 160302'],
-    (Ecu.engine, 0x7e0, None): [b'\xf1\x810000000000\x00'],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xf1\x87VDGMD15866192DD3x\x88x\x89wuFvvfUf\x88vWwgwwwvfVgx\x87o\xff\xbc^\xf1\x81E14\x00\x00\x00\x00\x00\x00\x00\xf1\x00bcshcm49  E14\x00\x00\x00\x00\x00\x00\x00SHI0G50NB1tc5\xb7',
+      b'\xf1\x00bcsh8p54  E25\x00\x00\x00\x00\x00\x00\x00SHI0T33UH2 \xe8\xce:',
+      b'\xf1\x87VCLLK19381052DL2\x86TFTwfff\x87eFUfT6f\x97T5T\x85T5Dg\x88o\xff\xc5s\xf1\x81E25\x00\x00\x00\x00\x00\x00\x00\xf1\x00bcsh8p54  E25\x00\x00\x00\x00\x00\x00\x00SHI0T33UH2 \xe8\xce:',
+    ],
+    (Ecu.fwdRadar, 0x7d0, None): [
+      b'\xf1\x00HI__ SCC F-CUP      1.00 1.01 96400-D2100         ',
+      b'\xf1\x00HI__ SCC F-CU-      1.00 1.02 99110-D2000         ',
+    ],
+    (Ecu.fwdCamera, 0x7c4, None): [
+      b'\xf1\x00HI  LKAS AT USA LHD 1.00 1.00 95895-D2020 160302',
+      b'\xf1\x00HI  MFC  AT MES LHD 1.00 1.03 99211-D2000 190831',
+    ],
+    (Ecu.engine, 0x7e0, None): [
+      b'\xf1\x810000000000\x00',
+      b'\xf1\x81640H2051\x00\x00\x00\x00\x00\x00\x00\x00',
+    ],
   },
   CAR.KONA: {
     (Ecu.fwdRadar, 0x7d0, None): [b'\xf1\x00OS__ SCC F-CUP      1.00 1.00 95655-J9200         ', ],
