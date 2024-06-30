@@ -192,13 +192,13 @@ class OtisServ(BaseHTTPRequestHandler):
     else:
       self.display_page_addr_input()
 
-  def get_logo(self):
-    self.send_response(200)
-    self.send_header('Content-type','image/png')
-    self.end_headers()
-    f = open("%s/selfdrive/assets/img_spinner_nmk.png" % BASEDIR, "rb")
-    self.wfile.write(f.read())
-    f.close()
+#  def get_logo(self):
+#   self.send_response(200)
+#    self.send_header('Content-type','image/png')
+#    self.end_headers()
+#    f = open("%s/selfdrive/assets/img_spinner_nmk.png" % BASEDIR, "rb")
+#    self.wfile.write(f.read())
+#    f.close()
 
   def get_gmap_css(self):
     self.wfile.write(bytes(self.get_parsed_template("gmap/style.css"), "utf-8"))
