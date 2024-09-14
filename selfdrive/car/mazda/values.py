@@ -13,26 +13,26 @@ Ecu = car.CarParams.Ecu
 # Steer torque limits
 
 class CarControllerParams:
-  STEER_MAX = 800                # theoretical max_steer 2047
-  STEER_DELTA_UP = 10             # torque increase per refresh
-  STEER_DELTA_DOWN = 25           # torque decrease per refresh
-  STEER_DRIVER_ALLOWANCE = 15     # allowed driver torque before start limiting
-  STEER_DRIVER_MULTIPLIER = 1     # weight driver torque
-  STEER_DRIVER_FACTOR = 1         # from dbc
-  STEER_ERROR_MAX = 350           # max delta between torque cmd and torque motor
-  STEER_STEP = 1  # 100 Hz
+  STEER_MAX = 800                 # الحد الأقصى النظري للتوجيه 2047
+  STEER_DELTA_UP = 10             # زيادة العزم في كل تحديث
+  STEER_DELTA_DOWN = 25           # تقليل العزم في كل تحديث
+  STEER_DRIVER_ALLOWANCE = 15     # العزم المسموح للسائق قبل بدء التقييد
+  STEER_DRIVER_MULTIPLIER = 1     # تأثير عزم السائق
+  STEER_DRIVER_FACTOR = 1         # من dbc
+  STEER_ERROR_MAX = 350           # الحد الأقصى للفارق بين أمر العزم وعزم المحرك
+  STEER_STEP = 1                  # 100 هرتز
 
   def __init__(self, CP):
     pass
 
 
 class CAR:
-  CX5 = "MAZDA CX-5"
-  CX9 = "MAZDA CX-9"
-  MAZDA3 = "MAZDA 3"
-  MAZDA6 = "MAZDA 6"
-  CX9_2021 = "MAZDA CX-9 2021"
-  CX5_2022 = "MAZDA CX-5 2022"
+  CX5 = "مازدا CX-5"
+  CX9 = "مازدا CX-9"
+  MAZDA3 = "مازدا 3"
+  MAZDA6 = "مازدا 6"
+  CX9_2021 = "مازدا CX-9 2021"
+  CX5_2022 = "مازدا CX-5 2022"
 
 
 @dataclass
@@ -323,5 +323,5 @@ DBC = {
   CAR.CX5_2022: dbc_dict('mazda_2017', None),
 }
 
-# Gen 1 hardware: same CAN messages and same camera
+# الجيل الأول من الأجهزة: نفس رسائل CAN ونفس الكاميرا
 GEN1 = {CAR.CX5, CAR.CX9, CAR.CX9_2021, CAR.MAZDA3, CAR.MAZDA6, CAR.CX5_2022}

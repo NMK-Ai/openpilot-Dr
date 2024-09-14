@@ -14,7 +14,7 @@ Ecu = car.CarParams.Ecu
 class CarControllerParams:
   ANGLE_RATE_LIMIT_UP = AngleRateLimit(speed_bp=[0., 5., 15.], angle_v=[5., .8, .15])
   ANGLE_RATE_LIMIT_DOWN = AngleRateLimit(speed_bp=[0., 5., 15.], angle_v=[5., 3.5, 0.4])
-  LKAS_MAX_TORQUE = 1               # A value of 1 is easy to overpower
+  LKAS_MAX_TORQUE = 1               # قيمة 1 تجعل من السهل التغلب على نظام LKAS
   STEER_THRESHOLD = 1.0
 
   def __init__(self, CP):
@@ -22,14 +22,13 @@ class CarControllerParams:
 
 
 class CAR:
-  XTRAIL = "NISSAN X-TRAIL 2017"
-  LEAF = "NISSAN LEAF 2018"
-  # Leaf with ADAS ECU found behind instrument cluster instead of glovebox
-  # Currently the only known difference between them is the inverted seatbelt signal.
-  LEAF_IC = "NISSAN LEAF 2018 Instrument Cluster"
-  ROGUE = "NISSAN ROGUE 2019"
-  ALTIMA = "NISSAN ALTIMA 2020"
-
+  XTRAIL = "نيسان إكس تريل 2017"
+  LEAF = "نيسان ليف 2018"
+  # ليف مع وحدة تحكم ADAS تم العثور عليها خلف لوحة العدادات بدلاً من صندوق القفازات
+  # الاختلاف الوحيد المعروف حالياً هو الإشارة المعكوسة لحزام الأمان.
+  LEAF_IC = "نيسان ليف 2018 لوحة العدادات"
+  ROGUE = "نيسان روج 2019"
+  ALTIMA = "نيسان التيما 2020"
 
 @dataclass
 class NissanCarInfo(CarInfo):

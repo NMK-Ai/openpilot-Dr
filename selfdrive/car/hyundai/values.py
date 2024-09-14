@@ -33,20 +33,20 @@ class CarControllerParams:
       self.STEER_DELTA_UP = 2
       self.STEER_DELTA_DOWN = 3
 
-    # To determine the limit for your car, find the maximum value that the stock LKAS will request.
-    # If the max stock LKAS request is <384, add your car to this list.
+    # لتحديد الحد الأقصى لسيارتك، ابحث عن القيمة القصوى التي سيطلبها نظام المساعدة في الحفاظ على المسار (LKAS) الأصلي.
+    # إذا كانت القيمة القصوى التي يطلبها نظام LKAS الأصلي أقل من 384، قم بإضافة سيارتك إلى هذه القائمة.
     elif CP.carFingerprint in (CAR.GENESIS_G80, CAR.GENESIS_G90, CAR.ELANTRA, CAR.IONIQ,
                                CAR.IONIQ_EV_LTD, CAR.SANTA_FE_PHEV_2022, CAR.SONATA_LF, CAR.KIA_FORTE, CAR.KIA_NIRO_PHEV,
                                CAR.KIA_OPTIMA_H, CAR.KIA_SORENTO):
       self.STEER_MAX = 255
 
-    # these cars have significantly more torque than most HKG; limit to 70% of max
+    # هذه السيارات تمتلك عزم دوران أعلى بشكل كبير من معظم سيارات HKG حدد الحد بنسبة 70% من القيمة القصوى.
     elif CP.flags & HyundaiFlags.ALT_LIMITS:
       self.STEER_MAX = 270
       self.STEER_DELTA_UP = 2
       self.STEER_DELTA_DOWN = 3
 
-    # Default for most HKG
+    # الإعداد الافتراضي لمعظم سيارات HKG.
     else:
       self.STEER_MAX = 384
 
@@ -65,69 +65,69 @@ class HyundaiFlags(IntFlag):
 
 
 class CAR:
-  # Hyundai
-  ELANTRA = "HYUNDAI ELANTRA 2017"
-  ELANTRA_2021 = "HYUNDAI ELANTRA 2021"
-  ELANTRA_HEV_2021 = "HYUNDAI ELANTRA HYBRID 2021"
-  HYUNDAI_GENESIS = "HYUNDAI GENESIS 2015-2016"
-  IONIQ = "HYUNDAI IONIQ HYBRID 2017-2019"
-  IONIQ_HEV_2022 = "HYUNDAI IONIQ HYBRID 2020-2022"
-  IONIQ_EV_LTD = "HYUNDAI IONIQ ELECTRIC LIMITED 2019"
-  IONIQ_EV_2020 = "HYUNDAI IONIQ ELECTRIC 2020"
-  IONIQ_PHEV_2019 = "HYUNDAI IONIQ PLUG-IN HYBRID 2019"
-  IONIQ_PHEV = "HYUNDAI IONIQ PHEV 2020"
-  KONA = "HYUNDAI KONA 2020"
-  KONA_EV = "HYUNDAI KONA ELECTRIC 2019"
-  KONA_EV_2022 = "HYUNDAI KONA ELECTRIC 2022"
-  KONA_HEV = "HYUNDAI KONA HYBRID 2020"
-  SANTA_FE = "HYUNDAI SANTA FE 2019"
-  SANTA_FE_2022 = "HYUNDAI SANTA FE 2022"
-  SANTA_FE_HEV_2022 = "HYUNDAI SANTA FE HYBRID 2022"
-  SANTA_FE_PHEV_2022 = "HYUNDAI SANTA FE PlUG-IN HYBRID 2022"
-  SONATA = "HYUNDAI SONATA 2020"
-  SONATA_LF = "HYUNDAI SONATA 2019"
-  TUCSON = "HYUNDAI TUCSON 2019"
-  PALISADE = "HYUNDAI PALISADE 2020"
-  VELOSTER = "HYUNDAI VELOSTER 2019"
-  SONATA_HYBRID = "HYUNDAI SONATA HYBRID 2021"
-  IONIQ_5 = "HYUNDAI IONIQ 5 2022"
-  TUCSON_4TH_GEN = "HYUNDAI TUCSON 4TH GEN"
-  TUCSON_HYBRID_4TH_GEN = "HYUNDAI TUCSON HYBRID 4TH GEN"
-  SANTA_CRUZ_1ST_GEN = "HYUNDAI SANTA CRUZ 1ST GEN"
+  # هيونداي
+  ELANTRA = "هيونداي إلنترا 2017"
+  ELANTRA_2021 = "هيونداي إلنترا 2021"
+  ELANTRA_HEV_2021 = "هيونداي إلنترا هايبرد 2021"
+  HYUNDAI_GENESIS = "هيونداي جينيسيس 2015-2016"
+  IONIQ = "هيونداي أيونيك هايبرد 2017-2019"
+  IONIQ_HEV_2022 = "هيونداي أيونيك هايبرد 2020-2022"
+  IONIQ_EV_LTD = "هيونداي أيونيك كهربائية محدودة 2019"
+  IONIQ_EV_2020 = "هيونداي أيونيك كهربائية 2020"
+  IONIQ_PHEV_2019 = "هيونداي أيونيك هجينة قابلة للشحن 2019"
+  IONIQ_PHEV = "هيونداي أيونيك هجينة قابلة للشحن 2020"
+  KONA = "هيونداي كونا 2020"
+  KONA_EV = "هيونداي كونا كهربائية 2019"
+  KONA_EV_2022 = "هيونداي كونا كهربائية 2022"
+  KONA_HEV = "هيونداي كونا هايبرد 2020"
+  SANTA_FE = "هيونداي سنتافي 2019"
+  SANTA_FE_2022 = "هيونداي سنتافي 2022"
+  SANTA_FE_HEV_2022 = "هيونداي سنتافي هايبرد 2022"
+  SANTA_FE_PHEV_2022 = "هيونداي سنتافي هجينة قابلة للشحن 2022"
+  SONATA = "هيونداي سوناتا 2020"
+  SONATA_LF = "هيونداي سوناتا 2019"
+  TUCSON = "هيونداي توسان 2019"
+  PALISADE = "هيونداي باليسايد 2020"
+  VELOSTER = "هيونداي فيلوستر 2019"
+  SONATA_HYBRID = "هيونداي سوناتا هايبرد 2021"
+  IONIQ_5 = "هيونداي أيونيك 5 2022"
+  TUCSON_4TH_GEN = "هيونداي توسان الجيل الرابع"
+  TUCSON_HYBRID_4TH_GEN = "هيونداي توسان هايبرد الجيل الرابع"
+  SANTA_CRUZ_1ST_GEN = "هيونداي سانتا كروز الجيل الأول"
 
-  # Kia
-  KIA_FORTE = "KIA FORTE E 2018 & GT 2021"
-  KIA_K5_2021 = "KIA K5 2021"
-  KIA_K5_HEV_2020 = "KIA K5 HYBRID 2020"
-  KIA_NIRO_EV = "KIA NIRO EV 2020"
-  KIA_NIRO_PHEV = "KIA NIRO HYBRID 2019"
-  KIA_NIRO_HEV_2021 = "KIA NIRO HYBRID 2021"
-  KIA_NIRO_HEV_2ND_GEN = "KIA NIRO HYBRID 2ND GEN"
-  KIA_OPTIMA_G4 = "KIA OPTIMA 4TH GEN"
-  KIA_OPTIMA_G4_FL = "KIA OPTIMA 4TH GEN FACELIFT"
-  KIA_OPTIMA_H = "KIA OPTIMA HYBRID 2017 & SPORTS 2019"
-  KIA_SELTOS = "KIA SELTOS 2021"
-  KIA_SPORTAGE_5TH_GEN = "KIA SPORTAGE 5TH GEN"
-  KIA_SORENTO = "KIA SORENTO GT LINE 2018"
-  KIA_SORENTO_4TH_GEN = "KIA SORENTO 4TH GEN"
-  KIA_SORENTO_PHEV_4TH_GEN = "KIA SORENTO PLUG-IN HYBRID 4TH GEN"
-  KIA_SPORTAGE_HYBRID_5TH_GEN = "KIA SPORTAGE HYBRID 5TH GEN"
-  KIA_STINGER = "KIA STINGER GT2 2018"
-  KIA_STINGER_2022 = "KIA STINGER 2022"
-  KIA_CEED = "KIA CEED INTRO ED 2019"
-  KIA_EV6 = "KIA EV6 2022"
+  # كيا
+  KIA_FORTE = "كيا فورتي إي 2018 & جي تي 2021"
+  KIA_K5_2021 = "كيا K5 2021"
+  KIA_K5_HEV_2020 = "كيا K5 هايبرد 2020"
+  KIA_NIRO_EV = "كيا نيرو كهربائية 2020"
+  KIA_NIRO_PHEV = "كيا نيرو هجينة قابلة للشحن 2019"
+  KIA_NIRO_HEV_2021 = "كيا نيرو هجينة 2021"
+  KIA_NIRO_HEV_2ND_GEN = "كيا نيرو هجينة الجيل الثاني"
+  KIA_OPTIMA_G4 = "كيا أوبتيما الجيل الرابع"
+  KIA_OPTIMA_G4_FL = "كيا أوبتيما الجيل الرابع فيس ليفت"
+  KIA_OPTIMA_H = "كيا أوبتيما هايبرد 2017 & سبورت 2019"
+  KIA_SELTOS = "كيا سيلتوس 2021"
+  KIA_SPORTAGE_5TH_GEN = "كيا سبورتاج الجيل الخامس"
+  KIA_SORENTO = "كيا سورينتو جي تي لاين 2018"
+  KIA_SORENTO_4TH_GEN = "كيا سورينتو الجيل الرابع"
+  KIA_SORENTO_PHEV_4TH_GEN = "كيا سورينتو هجينة قابلة للشحن الجيل الرابع"
+  KIA_SPORTAGE_HYBRID_5TH_GEN = "كيا سبورتاج هايبرد الجيل الخامس"
+  KIA_STINGER = "كيا ستينجر جي تي 2 2018"
+  KIA_STINGER_2022 = "كيا ستينجر 2022"
+  KIA_CEED = "كيا سيد نسخة المقدمة 2019"
+  KIA_EV6 = "كيا EV6 2022"
 
-  # Genesis
-  GENESIS_GV60_EV_1ST_GEN = "GENESIS GV60 ELECTRIC 1ST GEN"
-  GENESIS_G70 = "GENESIS G70 2018"
-  GENESIS_G70_2020 = "GENESIS G70 2020"
-  GENESIS_GV70_1ST_GEN = "GENESIS GV70 1ST GEN"
-  GENESIS_G80 = "GENESIS G80 2017"
-  GENESIS_G90 = "GENESIS G90 2017"
+  # جينيسيس 
+  GENESIS_GV60_EV_1ST_GEN = "جينيسيس GV60 كهربائية الجيل الأول"
+  GENESIS_G70 = "جينيسيس G70 2018"
+  GENESIS_G70_2020 = "جينيسيس G70 2020"
+  GENESIS_GV70_1ST_GEN = "جينيسيس GV70 الجيل الأول"
+  GENESIS_G80 = "جينيسيس G80 2017"
+  GENESIS_G90 = "جينيسيس G90 2017"
 
 
 class Footnote(Enum):
-  # footnotes which mention "red panda" will be replaced with the CAN FD panda kit on the shop page
+  # ستستبدل الملاحظات التي تشير إلى 'الباندا الحمراء' بمجموعة CAN FD باندا على صفحة المتجر.
   CANFD = CarFootnote(
     "Requires a <a href=\"https://comma.ai/shop/panda\" target=\"_blank\">red panda</a> for this <a href=\"https://en.wikipedia.org/wiki/CAN_FD\" target=\"_blank\">CAN FD car</a>. " +
     "All the hardware needed is sold in the <a href=\"https://comma.ai/shop/can-fd-panda-kit\" target=\"_blank\">CAN FD kit</a>.",
@@ -193,7 +193,7 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
   CAR.TUCSON_HYBRID_4TH_GEN: HyundaiCarInfo("Hyundai Tucson Hybrid 2022", "All", harness=Harness.hyundai_n),
   CAR.SANTA_CRUZ_1ST_GEN: HyundaiCarInfo("Hyundai Santa Cruz 2022-23", harness=Harness.hyundai_n),
 
-  # Kia
+  # كيا
   CAR.KIA_FORTE: HyundaiCarInfo("Kia Forte 2019-21", harness=Harness.hyundai_g),
   CAR.KIA_K5_2021: HyundaiCarInfo("Kia K5 2021-22", harness=Harness.hyundai_a),
   CAR.KIA_K5_HEV_2020: HyundaiCarInfo("Kia K5 Hybrid 2020", harness=Harness.hyundai_a),
@@ -208,14 +208,14 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
     HyundaiCarInfo("Kia Niro Plug-in Hybrid 2020", "All", harness=Harness.hyundai_d),
   ],
   CAR.KIA_NIRO_HEV_2021: [
-    HyundaiCarInfo("Kia Niro Hybrid 2021", harness=Harness.hyundai_f),  # TODO: could be hyundai_d, verify
+    HyundaiCarInfo("Kia Niro Hybrid 2021", harness=Harness.hyundai_f),  # ملاحظة: قد تكون hyundai_d، تحقق من ذلك
     HyundaiCarInfo("Kia Niro Hybrid 2022", harness=Harness.hyundai_h),
   ],
   CAR.KIA_NIRO_HEV_2ND_GEN: HyundaiCarInfo("Kia Niro Hybrid 2023", harness=Harness.hyundai_a),
-  CAR.KIA_OPTIMA_G4: HyundaiCarInfo("Kia Optima 2017", "Advanced Smart Cruise Control", harness=Harness.hyundai_b),  # TODO: may support 2016, 2018
+  CAR.KIA_OPTIMA_G4: HyundaiCarInfo("Kia Optima 2017", "Advanced Smart Cruise Control", harness=Harness.hyundai_b),  # ملاحظة: قد يدعم 2016، 2018
   CAR.KIA_OPTIMA_G4_FL: HyundaiCarInfo("Kia Optima 2019-20", harness=Harness.hyundai_g),
   CAR.KIA_OPTIMA_H: [
-    HyundaiCarInfo("Kia Optima Hybrid 2017", "Advanced Smart Cruise Control"),  # TODO: may support adjacent years
+    HyundaiCarInfo("Kia Optima Hybrid 2017", "Advanced Smart Cruise Control"),  # ملاحظة: يدعم موديل 2016 جي تي
     HyundaiCarInfo("Kia Optima Hybrid 2019"),
   ],
   CAR.KIA_SELTOS: HyundaiCarInfo("Kia Seltos 2021", harness=Harness.hyundai_a),
@@ -236,7 +236,7 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
     HyundaiCarInfo("Kia EV6 (with HDA II) 2022", "Highway Driving Assist II", harness=Harness.hyundai_p)
   ],
 
-  # Genesis
+  # جينيسيس
   CAR.GENESIS_GV60_EV_1ST_GEN: [
     HyundaiCarInfo("Genesis GV60 (Advanced Trim) 2023", "All", harness=Harness.hyundai_a),
     HyundaiCarInfo("Genesis GV60 (Performance Trim) 2023", "All", harness=Harness.hyundai_k),
@@ -253,7 +253,7 @@ class Buttons:
   RES_ACCEL = 1
   SET_DECEL = 2
   GAP_DIST = 3
-  CANCEL = 4  # on newer models, this is a pause/resume button
+  CANCEL = 4  # في الطرازات الأحدث، هذا هو زر الإيقاف/استئناف.
 
 FINGERPRINTS = {
   CAR.ELANTRA: [{
@@ -359,10 +359,10 @@ FINGERPRINTS = {
 }
 
 HYUNDAI_VERSION_REQUEST_LONG = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
-  p16(0xf100)  # Long description
+  p16(0xf100)  # وصف طويل
 
 HYUNDAI_VERSION_REQUEST_ALT = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
-  p16(0xf110)  # Alt long description
+  p16(0xf110)  # وصف طويل بديل
 
 HYUNDAI_VERSION_REQUEST_MULTI = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
   p16(uds.DATA_IDENTIFIER_TYPE.VEHICLE_MANUFACTURER_SPARE_PART_NUMBER) + \
@@ -373,8 +373,8 @@ HYUNDAI_VERSION_RESPONSE = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER + 0x4
 
 FW_QUERY_CONFIG = FwQueryConfig(
   requests=[
-    # TODO: minimize shared whitelists for CAN and cornerRadar for CAN-FD
-    # CAN queries (OBD-II port)
+    # قائمة المهام (TODO): تقليل القوائم البيضاء المشتركة لكل من CAN و رادار الزاوية (cornerRadar) في نظام CAN-FD.
+    # استعلامات CAN (منفذ OBD-II)
     Request(
       [HYUNDAI_VERSION_REQUEST_LONG],
       [HYUNDAI_VERSION_RESPONSE],
@@ -386,8 +386,8 @@ FW_QUERY_CONFIG = FwQueryConfig(
       whitelist_ecus=[Ecu.engine, Ecu.transmission, Ecu.eps, Ecu.abs, Ecu.fwdRadar],
     ),
 
-    # CAN-FD queries (from camera)
-    # TODO: combine shared whitelists with CAN requests
+    # استعلامات CAN-FD (من الكاميرا)
+    # قائمة المهام (TODO): دمج القوائم البيضاء المشتركة مع طلبات CAN.
     Request(
       [HYUNDAI_VERSION_REQUEST_LONG],
       [HYUNDAI_VERSION_RESPONSE],
@@ -404,7 +404,7 @@ FW_QUERY_CONFIG = FwQueryConfig(
       obd_multiplexing=False,
     ),
 
-    # CAN-FD debugging queries
+    # استعلامات تصحيح الأخطاء في CAN-FD
     Request(
       [HYUNDAI_VERSION_REQUEST_ALT],
       [HYUNDAI_VERSION_RESPONSE],
@@ -422,9 +422,9 @@ FW_QUERY_CONFIG = FwQueryConfig(
     ),
   ],
   extra_ecus=[
-    (Ecu.adas, 0x730, None),         # ADAS Driving ECU on HDA2 platforms
-    (Ecu.parking, 0x7b1, None),      # ADAS Parking ECU (may exist on all platforms)
-    (Ecu.hvac, 0x7b3, None),         # HVAC Control Assembly
+    (Ecu.adas, 0x730, None),         # وحدة التحكم الإلكترونية (ECU) لنظام القيادة المساعدة (ADAS) على منصات HDA2
+    (Ecu.parking, 0x7b1, None),      # وحدة التحكم الإلكترونية (ECU) لنظام المساعدة في الركن (ADAS) (قد تكون موجودة في جميع المنصات)
+    (Ecu.hvac, 0x7b3, None),         # مجموعة التحكم في نظام التكييف (HVAC)
     (Ecu.cornerRadar, 0x7b7, None),
   ],
 )
@@ -600,8 +600,8 @@ FW_VERSIONS = {
       b'\xf1\x81HM6M1_0a0_G20',
     ],
     (Ecu.eps, 0x7d4, None): [
-      b'\xf1\x00DN8 MDPS C 1,00 1,01 56310L0010\x00 4DNAC101',  # modified firmware
-      b'\xf1\x8756310L0010\x00\xf1\x00DN8 MDPS C 1,00 1,01 56310L0010\x00 4DNAC101',  # modified firmware
+      b'\xf1\x00DN8 MDPS C 1,00 1,01 56310L0010\x00 4DNAC101',  # البرنامج الثابت المعدل
+      b'\xf1\x8756310L0010\x00\xf1\x00DN8 MDPS C 1,00 1,01 56310L0010\x00 4DNAC101',  # البرنامج الثابت المعدل
       b'\xf1\x00DN8 MDPS C 1.00 1.01 \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 4DNAC101',
       b'\xf1\x00DN8 MDPS C 1.00 1.01 56310-L0010 4DNAC101',
       b'\xf1\x00DN8 MDPS C 1.00 1.01 56310L0010\x00 4DNAC101',
@@ -1294,7 +1294,7 @@ FW_VERSIONS = {
       b'\xf1\x8758520-K4010\xf1\x00OS IEB \x04 101 \x11\x13 58520-K4010',
       b'\xf1\x8758520-K4010\xf1\x00OS IEB \x03 101 \x11\x13 58520-K4010',
       b'\xf1\x00OS IEB \r 102"\x05\x16 58520-K4010',
-      # TODO: these return from the MULTI request, above return from LONG
+      # ملاحظة: هذه تعود من طلب متعدد المذكورة أعلاه تعود من الطويل
       b'\x01\x04\x7f\xff\xff\xf8\xff\xff\x00\x00\x01\xd3\x00\x00\x00\x00\xff\xb7\xff\xee\xff\xe0\x00\xc0\xc0\xfc\xd5\xfc\x00\x00U\x10\xffP\xf5\xff\xfd\x00\x00\x00\x00\xfc\x00\x01',
       b'\x01\x04\x7f\xff\xff\xf8\xff\xff\x00\x00\x01\xdb\x00\x00\x00\x00\xff\xb1\xff\xd9\xff\xd2\x00\xc0\xc0\xfc\xd5\xfc\x00\x00U\x10\xff\xd6\xf5\x00\x06\x00\x00\x00\x14\xfd\x00\x04',
       b'\x01\x04\x7f\xff\xff\xf8\xff\xff\x00\x00\x01\xd3\x00\x00\x00\x00\xff\xb7\xff\xf4\xff\xd9\x00\xc0',
@@ -1744,7 +1744,7 @@ CHECKSUM = {
 }
 
 FEATURES = {
-  # which message has the gear
+  # أي رسالة تحتوي على معلومات الترس
   "use_cluster_gears": {CAR.ELANTRA, CAR.KONA},
   "use_tcu_gears": {CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.SONATA_LF, CAR.VELOSTER, CAR.TUCSON},
   "use_elect_gears": {CAR.KIA_NIRO_EV, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.KIA_OPTIMA_H, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.IONIQ, CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.KONA_EV_2022, CAR.KIA_K5_HEV_2020},
@@ -1752,21 +1752,21 @@ FEATURES = {
 
 CANFD_CAR = {CAR.KIA_EV6, CAR.IONIQ_5, CAR.TUCSON_4TH_GEN, CAR.TUCSON_HYBRID_4TH_GEN, CAR.KIA_SPORTAGE_HYBRID_5TH_GEN, CAR.SANTA_CRUZ_1ST_GEN, CAR.KIA_SPORTAGE_5TH_GEN, CAR.GENESIS_GV70_1ST_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.GENESIS_GV60_EV_1ST_GEN, CAR.KIA_SORENTO_4TH_GEN, CAR.KIA_NIRO_HEV_2ND_GEN}
 
-# The radar does SCC on these cars when HDA I, rather than the camera
+# الرادار يقوم بتشغيل نظام التحكم الذكي في السرعة (SCC) في هذه السيارات عند استخدام HDA I، بدلاً من الكاميرا.
 CANFD_RADAR_SCC_CAR = {CAR.GENESIS_GV70_1ST_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.KIA_SORENTO_4TH_GEN}
 
-# The camera does SCC on these cars, rather than the radar
+# الكاميرا تقوم بتشغيل نظام التحكم الذكي في السرعة (SCC) في هذه السيارات، بدلاً من الرادار.
 CAMERA_SCC_CAR = {CAR.KONA_EV_2022, }
 
 HYBRID_CAR = {CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.TUCSON_HYBRID_4TH_GEN, CAR.KIA_SPORTAGE_HYBRID_5TH_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.KIA_K5_HEV_2020, CAR.KIA_NIRO_HEV_2ND_GEN}  # these cars use a different gas signal
 EV_CAR = {CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.KIA_NIRO_EV, CAR.KONA_EV_2022, CAR.KIA_EV6, CAR.IONIQ_5, CAR.GENESIS_GV60_EV_1ST_GEN}
 
-# these cars require a special panda safety mode due to missing counters and checksums in the messages
+# هذه السيارات تتطلب وضع أمان خاص لـ Panda بسبب غياب العدادات و Checksums في الرسائل.
 LEGACY_SAFETY_MODE_CAR = {CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ_PHEV, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF, CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.VELOSTER,
                           CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.KIA_CEED, CAR.ELANTRA, CAR.IONIQ_HEV_2022}
 
-# If 0x500 is present on bus 1 it probably has a Mando radar outputting radar points.
-# If no points are outputted by default it might be possible to turn it on using  selfdrive/debug/hyundai_enable_radar_points.py
+# إذا كانت الرسالة 0x500 موجودة على الحافلة 1، فمن المحتمل أن تحتوي على رادار Mando يقوم بإخراج نقاط الرادار.
+# إذا لم يتم إخراج أي نقاط بشكل افتراضي، قد يكون من الممكن تشغيلها باستخدام الملف selfdrive/debug/hyundai_enable_radar_points.py.
 DBC = {
   CAR.ELANTRA: dbc_dict('hyundai_kia_generic', None),
   CAR.ELANTRA_2021: dbc_dict('hyundai_kia_generic', None),
@@ -1792,7 +1792,7 @@ DBC = {
   CAR.KIA_OPTIMA_G4_FL: dbc_dict('hyundai_kia_generic', None),
   CAR.KIA_OPTIMA_H: dbc_dict('hyundai_kia_generic', None),
   CAR.KIA_SELTOS: dbc_dict('hyundai_kia_generic', None),
-  CAR.KIA_SORENTO: dbc_dict('hyundai_kia_generic', None), # Has 0x5XX messages, but different format
+  CAR.KIA_SORENTO: dbc_dict('hyundai_kia_generic', None), # Has  messages, but different format تحتوي على رسائل ولكن بتنسيق مختلف.
   CAR.KIA_STINGER: dbc_dict('hyundai_kia_generic', None),
   CAR.KIA_STINGER_2022: dbc_dict('hyundai_kia_generic', None),
   CAR.KONA: dbc_dict('hyundai_kia_generic', None),
@@ -1804,7 +1804,7 @@ DBC = {
   CAR.SANTA_FE_HEV_2022: dbc_dict('hyundai_kia_generic', None),
   CAR.SANTA_FE_PHEV_2022: dbc_dict('hyundai_kia_generic', None),
   CAR.SONATA: dbc_dict('hyundai_kia_generic', 'hyundai_kia_mando_front_radar_generated'),
-  CAR.SONATA_LF: dbc_dict('hyundai_kia_generic', None), # Has 0x5XX messages, but different format
+  CAR.SONATA_LF: dbc_dict('hyundai_kia_generic', None), # Has  messages, but different format تحتوي على رسائل ولكن بتنسيق مختلف.
   CAR.TUCSON: dbc_dict('hyundai_kia_generic', None),
   CAR.PALISADE: dbc_dict('hyundai_kia_generic', 'hyundai_kia_mando_front_radar_generated'),
   CAR.VELOSTER: dbc_dict('hyundai_kia_generic', None),

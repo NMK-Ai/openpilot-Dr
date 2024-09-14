@@ -12,8 +12,8 @@ Button = namedtuple('Button', ['event_type', 'can_addr', 'can_msg', 'values'])
 
 
 class CAR:
-  AP1_MODELS = 'TESLA AP1 MODEL S'
-  AP2_MODELS = 'TESLA AP2 MODEL S'
+  AP1_MODELS = 'تسلا AP1 موديل S'
+  AP2_MODELS = 'تسلا AP2 موديل S'
 
 
 CAR_INFO: Dict[str, Union[CarInfo, List[CarInfo]]] = {

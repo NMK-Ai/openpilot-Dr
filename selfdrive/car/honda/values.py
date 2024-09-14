@@ -14,14 +14,12 @@ VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 
 class CarControllerParams:
-  # Allow small margin below -3.5 m/s^2 from ISO 15622:2018 since we
-  # perform the closed loop control, and might need some
-  # to apply some more braking if we're on a downhill slope.
-  # Our controller should still keep the 2 second average above
-  # -3.5 m/s^2 as per planner limits
-  NIDEC_ACCEL_MIN = -4.0  # m/s^2
-  NIDEC_ACCEL_MAX = 1.6  # m/s^2, lower than 2.0 m/s^2 for tuning reasons
-
+  # السماح بهامش صغير تحت -3.5 م/ث^2 من معيار ISO 15622:2018 لأننا نقوم بالتحكم في الحلقة المغلقة،
+  # وقد نحتاج إلى تطبيق المزيد من الكبح إذا كنا على منحدر.
+  # يجب أن يحافظ نظام التحكم لدينا على المتوسط لمدة 2 ثانية أعلى من
+  # -3.5 م/ث^2 كما هو محدد في حدود المخطط.
+  NIDEC_ACCEL_MIN = -4.0  # م/ث^2
+  NIDEC_ACCEL_MAX = 1.6    # م/ث^2، أقل من 2.0 م/ث^2 لأسباب تتعلق بالضبط
   NIDEC_ACCEL_LOOKUP_BP = [-1., 0., .6]
   NIDEC_ACCEL_LOOKUP_V = [-4.8, 0., 2.0]
 
@@ -31,15 +29,15 @@ class CarControllerParams:
   NIDEC_GAS_MAX = 198  # 0xc6
   NIDEC_BRAKE_MAX = 1024 // 4
 
-  BOSCH_ACCEL_MIN = -3.5  # m/s^2
-  BOSCH_ACCEL_MAX = 2.0  # m/s^2
+  BOSCH_ACCEL_MIN = -3.5  # م/ث^2
+  BOSCH_ACCEL_MAX = 2.0   # م/ث^2
 
-  BOSCH_GAS_LOOKUP_BP = [-0.2, 2.0]  # 2m/s^2
+  BOSCH_GAS_LOOKUP_BP = [-0.2, 2.0]  # 2 م/ث^2
   BOSCH_GAS_LOOKUP_V = [0, 1600]
 
   def __init__(self, CP):
     self.STEER_MAX = CP.lateralParams.torqueBP[-1]
-    # mirror of list (assuming first item is zero) for interp of signed request values
+# نسخة معكوسة من القائمة (بافتراض أن العنصر الأول هو صفر) لاستخدامها في استيفاء قيم الطلب الموقعة
     assert(CP.lateralParams.torqueBP[0] == 0)
     assert(CP.lateralParams.torqueBP[0] == 0)
     self.STEER_LOOKUP_BP = [v * -1 for v in CP.lateralParams.torqueBP][1:][::-1] + list(CP.lateralParams.torqueBP)
@@ -47,11 +45,11 @@ class CarControllerParams:
 
 
 class HondaFlags(IntFlag):
-  # Bosch models with alternate set of LKAS_HUD messages
+# نماذج Bosch مع مجموعة بديلة من رسائل LKAS_HUD
   BOSCH_EXT_HUD = 1
 
 
-# Car button codes
+# أكواد أزرار السيارة
 class CruiseButtons:
   RES_ACCEL = 4
   DECEL_SET = 3
@@ -59,7 +57,7 @@ class CruiseButtons:
   MAIN = 1
 
 
-# See dbc files for info on values
+# راجع ملفات dbc للحصول على معلومات حول القيم
 VISUAL_HUD = {
   VisualAlert.none: 0,
   VisualAlert.fcw: 1,
@@ -73,30 +71,30 @@ VISUAL_HUD = {
 
 
 class CAR:
-  ACCORD = "HONDA ACCORD 2018"
-  ACCORDH = "HONDA ACCORD HYBRID 2018"
-  CIVIC = "HONDA CIVIC 2016"
-  CIVIC_BOSCH = "HONDA CIVIC (BOSCH) 2019"
-  CIVIC_BOSCH_DIESEL = "HONDA CIVIC SEDAN 1.6 DIESEL 2019"
-  CIVIC_2022 = "HONDA CIVIC 2022"
-  ACURA_ILX = "ACURA ILX 2016"
-  CRV = "HONDA CR-V 2016"
-  CRV_5G = "HONDA CR-V 2017"
-  CRV_EU = "HONDA CR-V EU 2016"
-  CRV_HYBRID = "HONDA CR-V HYBRID 2019"
-  CRV_HYBRID_BSM = "HONDA CR-V HYBRID 2019 w/ BSM"
-  FIT = "HONDA FIT 2018"
-  FREED = "HONDA FREED 2020"
-  HRV = "HONDA HRV 2019"
-  ODYSSEY = "HONDA ODYSSEY 2018"
-  ODYSSEY_CHN = "HONDA ODYSSEY CHN 2019"
-  ODYSSEY_HYBRID = "HONDA ODYSSEY HYBRID CHN 2022"
-  ACURA_RDX = "ACURA RDX 2018"
-  ACURA_RDX_3G = "ACURA RDX 2020"
-  PILOT = "HONDA PILOT 2017"
-  RIDGELINE = "HONDA RIDGELINE 2017"
-  INSIGHT = "HONDA INSIGHT 2019"
-  HONDA_E = "HONDA E 2020"
+  ACCORD = "هوندا أكورد 2018"
+  ACCORDH = "هوندا أكورد هايبرد 2018"
+  CIVIC = "هوندا سيفيك 2016"
+  CIVIC_BOSCH = "هوندا سيفيك (بوش) 2019"
+  CIVIC_BOSCH_DIESEL = "هوندا سيفيك سيدان 1.6 ديزل 2019"
+  CIVIC_2022 = "هوندا سيفيك 2022"
+  ACURA_ILX = "أكورا ILX 2016"
+  CRV = "هوندا CR-V 2016"
+  CRV_5G = "هوندا CR-V 2017"
+  CRV_EU = "هوندا CR-V EU 2016"
+  CRV_HYBRID = "هوندا CR-V هايبرد 2019"
+  CRV_HYBRID_BSM = "هوندا CR-V هايبرد 2019 مع BSM"
+  FIT = "هوندا فيت 2018"
+  FREED = "هوندا فريد 2020"
+  HRV = "هوندا HR-V 2019"
+  ODYSSEY = "هوندا أوديسي 2018"
+  ODYSSEY_CHN = "هوندا أوديسي الصين 2019"
+  ODYSSEY_HYBRID = "هوندا أوديسي هايبرد الصين 2022"
+  ACURA_RDX = "أكورا RDX 2018"
+  ACURA_RDX_3G = "أكورا RDX الجيل الثالث 2020"
+  PILOT = "هوندا بايلوت 2017"
+  RIDGELINE = "هوندا ريدجلاين 2017"
+  INSIGHT = "هوندا إنسايت 2019"
+  HONDA_E = "هوندا E 2020"
 
 
 class Footnote(Enum):
@@ -127,7 +125,7 @@ CAR_INFO: Dict[str, Optional[Union[HondaCarInfo, List[HondaCarInfo]]]] = {
     HondaCarInfo("Honda Civic 2019-21", "All", "https://www.youtube.com/watch?v=4Iz1Mz5LGF8", [Footnote.CIVIC_DIESEL], 2. * CV.MPH_TO_MS),
     HondaCarInfo("Honda Civic Hatchback 2017-21", min_steer_speed=12. * CV.MPH_TO_MS),
   ],
-  CAR.CIVIC_BOSCH_DIESEL: None,  # same platform
+  CAR.CIVIC_BOSCH_DIESEL: None,  # نفس المنصة
   CAR.CIVIC_2022: [
     HondaCarInfo("Honda Civic 2022", "All"),
     HondaCarInfo("Honda Civic Hatchback 2022", "All"),
@@ -135,7 +133,7 @@ CAR_INFO: Dict[str, Optional[Union[HondaCarInfo, List[HondaCarInfo]]]] = {
   CAR.ACURA_ILX: HondaCarInfo("Acura ILX 2016-19", "AcuraWatch Plus", min_steer_speed=25. * CV.MPH_TO_MS),
   CAR.CRV: HondaCarInfo("Honda CR-V 2015-16", "Touring Trim", min_steer_speed=12. * CV.MPH_TO_MS),
   CAR.CRV_5G: HondaCarInfo("Honda CR-V 2017-22", min_steer_speed=12. * CV.MPH_TO_MS),
-  CAR.CRV_EU: None,  # HondaCarInfo("Honda CR-V EU", "Touring"),  # Euro version of CRV Touring
+  CAR.CRV_EU: None,  # HondaCarInfo("هوندا CR-V EU", "Touring"),  # النسخة الأوروبية من CRV Touring
   CAR.CRV_HYBRID: HondaCarInfo("Honda CR-V Hybrid 2017-19", min_steer_speed=12. * CV.MPH_TO_MS),
   CAR.FIT: HondaCarInfo("Honda Fit 2018-20", min_steer_speed=12. * CV.MPH_TO_MS),
   CAR.FREED: HondaCarInfo("Honda Freed 2020", min_steer_speed=12. * CV.MPH_TO_MS),
@@ -161,29 +159,29 @@ HONDA_VERSION_RESPONSE = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER + 0x40]
 
 FW_QUERY_CONFIG = FwQueryConfig(
   requests=[
-    # Currently used to fingerprint
+    # يُستخدم حالياً لتحديد البصمة
     Request(
       [StdQueries.UDS_VERSION_REQUEST],
       [StdQueries.UDS_VERSION_RESPONSE],
       bus=1,
     ),
 
-    # Data collection requests:
-    # Log extra identifiers for current ECUs
+    # طلبات جمع البيانات:
+    # تسجيل معرفات إضافية للوحدات الإلكترونية الحالية (ECUs)
     Request(
       [HONDA_VERSION_REQUEST],
       [HONDA_VERSION_RESPONSE],
       bus=1,
       logging=True,
     ),
-    # Nidec PT bus
+    # ناقل Nidec PT
     Request(
       [StdQueries.UDS_VERSION_REQUEST],
       [StdQueries.UDS_VERSION_RESPONSE],
       bus=0,
       logging=True,
     ),
-    # Bosch PT bus
+    # ناقل Bosch PT
     Request(
       [StdQueries.UDS_VERSION_REQUEST],
       [StdQueries.UDS_VERSION_RESPONSE],
@@ -193,7 +191,7 @@ FW_QUERY_CONFIG = FwQueryConfig(
     ),
   ],
   extra_ecus=[
-    # The only other ECU on PT bus accessible by camera on radarless Civic
+    # وحدة التحكم الإلكترونية الوحيدة الأخرى على ناقل PT التي يمكن الوصول إليها بواسطة الكاميرا في هوندا سيفيك بدون رادار
     (Ecu.unknown, 0x18DAB3F1, None),
   ],
 )
@@ -285,7 +283,7 @@ FW_VERSIONS = {
       b'39990-TVA-A340\x00\x00',
       b'39990-TVA-X030\x00\x00',
       b'39990-TVA-X040\x00\x00',
-      b'39990-TVA,A150\x00\x00', # modified firmware
+      b'39990-TVA,A150\x00\x00', # البرنامج الثابت المعدل
       b'39990-TVE-H130\x00\x00',
     ],
     (Ecu.unknown, 0x18da3af1, None): [
@@ -471,7 +469,7 @@ FW_VERSIONS = {
       b'57114-TEA-Q220\x00\x00',
     ],
     (Ecu.eps, 0x18da30f1, None): [
-      b'39990-TBA,A030\x00\x00', # modified firmware
+      b'39990-TBA,A030\x00\x00', # البرنامج الثابت المعدل
       b'39990-TBA-A030\x00\x00',
       b'39990-TBG-A030\x00\x00',
       b'39990-TEA-T020\x00\x00',
@@ -813,7 +811,7 @@ FW_VERSIONS = {
       b'39990-TLA-A040\x00\x00',
       b'39990-TLA-A110\x00\x00',
       b'39990-TLA-A220\x00\x00',
-      b'39990-TLA,A040\x00\x00', # modified firmware
+      b'39990-TLA,A040\x00\x00', # البرنامج الثابت المعدل
       b'39990-TME-T030\x00\x00',
       b'39990-TME-T120\x00\x00',
       b'39990-TMT-T010\x00\x00',
@@ -978,7 +976,7 @@ FW_VERSIONS = {
       b'39990-TDK-J050\x00\x00',
       b'39990-TDK-N020\x00\x00',
     ],
-    # TODO: vsa is "essential" for fpv2 but doesn't appear on some models
+      # ملاحظة: vsa هو "أساسي" لـ fpv2 ولكنه لا يظهر في بعض الطرازات
     (Ecu.vsa, 0x18da28f1, None): [
       b'57114-TDK-J120\x00\x00',
       b'57114-TDK-J330\x00\x00',
@@ -1543,7 +1541,7 @@ DBC = {
 }
 
 STEER_THRESHOLD = {
-  # default is 1200, overrides go here
+  # الافتراضي هو 1200، التعديلات تضاف هنا
   CAR.ACURA_RDX: 400,
   CAR.CRV_EU: 400,
 }

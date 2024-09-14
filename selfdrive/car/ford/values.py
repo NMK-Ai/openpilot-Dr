@@ -12,28 +12,28 @@ Ecu = car.CarParams.Ecu
 
 
 class CarControllerParams:
-  # Messages: Lane_Assist_Data1, LateralMotionControl
+  # الرسائل: Lane_Assist_Data1، LateralMotionControl
   STEER_STEP = 5
-  # Message: ACCDATA
+  # الرسالة: ACCDATA
   ACC_CONTROL_STEP = 2
-  # Message: IPMA_Data
+  # الرسالة: IPMA_Data
   LKAS_UI_STEP = 100
-  # Message: ACCDATA_3
+  # الرسالة: ACCDATA_3
   ACC_UI_STEP = 5
-  # Message: Steering_Data_FD1, but send twice as fast
+  # الرسالة: Steering_Data_FD1، لكن يتم إرسالها مرتين أسرع
   BUTTONS_STEP = 10 / 2
 
-  CURVATURE_MAX = 0.02  # Max curvature for steering command, m^-1
-  STEER_DRIVER_ALLOWANCE = 1.0  # Driver intervention threshold, Nm
+  CURVATURE_MAX = 0.02  # أقصى تقوس لأمر التوجيه، م^-1
+  STEER_DRIVER_ALLOWANCE = 1.0  # عتبة تدخل السائق، نيوتن متر
 
-  # Curvature rate limits
-  # TODO: unify field names used by curvature and angle control cars
-  # ~2 m/s^3 up, ~-3 m/s^3 down
+  # حدود معدل التقوس
+  # ملاحظة: توحيد أسماء الحقول المستخدمة في سيارات التحكم بالتقوس وزاوية التوجيه
+  # ~2 م/ث^3 عند الزيادة، ~-3 م/ث^3 عند الانخفاض
   ANGLE_RATE_LIMIT_UP = AngleRateLimit(speed_bp=[5, 15, 25], angle_v=[0.004, 0.00044, 0.00016])
   ANGLE_RATE_LIMIT_DOWN = AngleRateLimit(speed_bp=[5, 15, 25], angle_v=[0.006, 0.00066, 0.00024])
 
-  ACCEL_MAX = 2.0               # m/s^s max acceleration
-  ACCEL_MIN = -3.5              # m/s^s max deceleration
+  ACCEL_MAX = 2.0               # م/ث^2 أقصى تسارع
+  ACCEL_MIN = -3.5              # م/ث^2 أقصى تباطؤ
 
   def __init__(self, CP):
     pass
@@ -46,19 +46,20 @@ class CANBUS:
 
 
 class CAR:
-  BRONCO_SPORT_MK1 = "FORD BRONCO SPORT 1ST GEN"
-  ESCAPE_MK4 = "FORD ESCAPE 4TH GEN"
-  EXPLORER_MK6 = "FORD EXPLORER 6TH GEN"
-  FOCUS_MK4 = "FORD FOCUS 4TH GEN"
-  MAVERICK_MK1 = "FORD MAVERICK 1ST GEN"
+  BRONCO_SPORT_MK1 = "فورد برونكو سبورت الجيل الأول"
+  ESCAPE_MK4 = "فورد إسكيب الجيل الرابع"
+  EXPLORER_MK6 = "فورد إكسبلورر الجيل السادس"
+  FOCUS_MK4 = "فورد فوكس الجيل الرابع"
+  MAVERICK_MK1 = "فورد مافريك الجيل الأول"
+
 
 
 CANFD_CARS: Set[str] = set()
 
 
 class RADAR:
-  DELPHI_ESR = 'ford_fusion_2018_adas'
-  DELPHI_MRR = 'FORD_CADS'
+  DELPHI_ESR = 'فورد فيوجن 2018 ADAS'
+  DELPHI_MRR = 'فورد CADS'
 
 
 DBC: Dict[str, Dict[str, str]] = defaultdict(lambda: dbc_dict("ford_lincoln_base_pt", RADAR.DELPHI_MRR))

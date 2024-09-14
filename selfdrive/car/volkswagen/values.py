@@ -18,16 +18,16 @@ Button = namedtuple('Button', ['event_type', 'can_addr', 'can_msg', 'values'])
 
 
 class CarControllerParams:
-  STEER_STEP = 2                          # HCA_01/HCA_1 message frequency 50Hz
-  ACC_CONTROL_STEP = 2                    # ACC_06/ACC_07/ACC_System frequency 50Hz
+  STEER_STEP = 2                          # تردد رسالة HCA_01/HCA_1 هو 50 هرتز.
+  ACC_CONTROL_STEP = 2                    # تردد نظام ACC_06/ACC_07/ACC هو 50 هرتز.
 
-  ACCEL_MAX = 2.0                         # 2.0 m/s max acceleration
-  ACCEL_MIN = -3.5                        # 3.5 m/s max deceleration
+  ACCEL_MAX = 2.0                         # التسارع الأقصى هو 2.0 م/ث.
+  ACCEL_MIN = -3.5                        # التباطؤ الأقصى هو 3.5 م/ث.
 
   def __init__(self, CP):
-    # Documented lateral limits: 3.00 Nm max, rate of change 5.00 Nm/sec.
-    # MQB vs PQ maximums are shared, but rate-of-change limited differently
-    # based on safety requirements driven by lateral accel testing.
+  # الحدود الموثقة للانعطاف الجانبي: 3.00 نيوتن متر كحد أقصى، معدل التغير 5.00 نيوتن متر/ثانية.
+  # الحدود القصوى لنظام MQB ونظام PQ مشتركة، لكن معدل التغير مختلف بناءً على متطلبات الأمان
+  # التي تعتمد على اختبارات التسارع الجانبي.
     self.STEER_MAX = 300                  # Max heading control assist torque 3.00 Nm
     self.STEER_DRIVER_MULTIPLIER = 3      # weight driver torque heavily
     self.STEER_DRIVER_FACTOR = 1          # from dbc
@@ -35,11 +35,11 @@ class CarControllerParams:
     can_define = CANDefine(DBC[CP.carFingerprint]["pt"])
 
     if CP.carFingerprint in PQ_CARS:
-      self.LDW_STEP = 5                   # LDW_1 message frequency 20Hz
-      self.ACC_HUD_STEP = 4               # ACC_GRA_Anzeige frequency 25Hz
-      self.STEER_DRIVER_ALLOWANCE = 80    # Driver intervention threshold 0.8 Nm
-      self.STEER_DELTA_UP = 6             # Max HCA reached in 1.00s (STEER_MAX / (50Hz * 1.00))
-      self.STEER_DELTA_DOWN = 10          # Min HCA reached in 0.60s (STEER_MAX / (50Hz * 0.60))
+      self.LDW_STEP = 5                   # تردد رسالة LDW_1 هو 20 هرتز.
+      self.ACC_HUD_STEP = 4               # تردد رسالة ACC_GRA_Anzeige هو 25 هرتز.
+      self.STEER_DRIVER_ALLOWANCE = 80    # عتبة تدخل السائق هي 0.8 نيوتن متر.
+      self.STEER_DELTA_UP = 6             # أقصى قيمة لنظام HCA تتحقق خلال 1.00 ثانية (STEER_MAX / (50Hz * 1.00)).
+      self.STEER_DELTA_DOWN = 10          # أدنى قيمة لنظام HCA تتحقق خلال 0.60 ثانية (STEER_MAX / (50Hz * 0.60)).
 
       if CP.transmissionType == TransmissionType.automatic:
         self.shifter_values = can_define.dv["Getriebe_1"]["Waehlhebelposition__Getriebe_1_"]
@@ -55,20 +55,20 @@ class CarControllerParams:
       ]
 
       self.LDW_MESSAGES = {
-        "none": 0,  # Nothing to display
-        "laneAssistUnavail": 1,  # "Lane Assist currently not available."
-        "laneAssistUnavailSysError": 2,  # "Lane Assist system error"
-        "laneAssistUnavailNoSensorView": 3,  # "Lane Assist not available. No sensor view."
-        "laneAssistTakeOver": 4,  # "Lane Assist: Please Take Over Steering"
-        "laneAssistDeactivTrailer": 5,  # "Lane Assist: no function with trailer"
+        "none": 0,  # لا يوجد شيء لعرضه.
+        "laneAssistUnavail": 1,  # "المساعدة في الحفاظ على المسار غير متوفرة حالياً."
+        "laneAssistUnavailSysError": 2,  # "خطأ في نظام المساعدة في الحفاظ على المسار."
+        "laneAssistUnavailNoSensorView": 3,  # "المساعدة في الحفاظ على المسار غير متوفرة. لا توجد رؤية للمستشعر."
+        "laneAssistTakeOver": 4,  # "المساعدة في الحفاظ على المسار: يرجى تولي عملية التوجيه."
+        "laneAssistDeactivTrailer": 5,  # "المساعدة في الحفاظ على المسار: لا توجد وظيفة مع المقطورة."
       }
 
     else:
-      self.LDW_STEP = 10                  # LDW_02 message frequency 10Hz
-      self.ACC_HUD_STEP = 6               # ACC_02 message frequency 16Hz
-      self.STEER_DRIVER_ALLOWANCE = 80    # Driver intervention threshold 0.8 Nm
-      self.STEER_DELTA_UP = 4             # Max HCA reached in 1.50s (STEER_MAX / (50Hz * 1.50))
-      self.STEER_DELTA_DOWN = 10          # Min HCA reached in 0.60s (STEER_MAX / (50Hz * 0.60))
+      self.LDW_STEP = 10                  # تردد رسالة LDW_02 هو 10 هرتز.
+      self.ACC_HUD_STEP = 6               # تردد رسالة ACC_02 هو 16 هرتز
+      self.STEER_DRIVER_ALLOWANCE = 80    # عتبة تدخل السائق هي 0.8 نيوتن متر
+      self.STEER_DELTA_UP = 4             # أقصى قيمة لنظام HCA تتحقق في 1.50 ثانية (STEER_MAX / (50Hz * 1.50))
+      self.STEER_DELTA_DOWN = 10          # أدنى قيمة لنظام HCA تتحقق في 0.60 ثانية (STEER_MAX / (50Hz * 0.60))
 
       if CP.transmissionType == TransmissionType.automatic:
         self.shifter_values = can_define.dv["Getriebe_11"]["GE_Fahrstufe"]
@@ -86,15 +86,15 @@ class CarControllerParams:
       ]
 
       self.LDW_MESSAGES = {
-        "none": 0,                            # Nothing to display
-        "laneAssistUnavailChime": 1,          # "Lane Assist currently not available." with chime
-        "laneAssistUnavailNoSensorChime": 3,  # "Lane Assist not available. No sensor view." with chime
-        "laneAssistTakeOverUrgent": 4,        # "Lane Assist: Please Take Over Steering" with urgent beep
-        "emergencyAssistUrgent": 6,           # "Emergency Assist: Please Take Over Steering" with urgent beep
-        "laneAssistTakeOverChime": 7,         # "Lane Assist: Please Take Over Steering" with chime
-        "laneAssistTakeOver": 8,              # "Lane Assist: Please Take Over Steering" silent
-        "emergencyAssistChangingLanes": 9,    # "Emergency Assist: Changing lanes..." with urgent beep
-        "laneAssistDeactivated": 10,          # "Lane Assist deactivated." silent with persistent icon afterward
+        "none": 0,                            # لا يوجد شيء لعرضه
+        "laneAssistUnavailChime": 1,          # "المساعدة في الحفاظ على المسار غير متوفرة حالياً." مع صوت تنبيه
+        "laneAssistUnavailNoSensorChime": 3,  # "المساعدة في الحفاظ على المسار غير متوفرة. لا توجد رؤية للمستشعر." مع صوت تنبيه
+        "laneAssistTakeOverUrgent": 4,        # "المساعدة في الحفاظ على المسار: يرجى تولي عملية التوجيه." مع تنبيه عاجل
+        "emergencyAssistUrgent": 6,           # "المساعدة الطارئة: يرجى تولي عملية التوجيه." مع تنبيه عاجل
+        "laneAssistTakeOverChime": 7,         # "المساعدة في الحفاظ على المسار: يرجى تولي عملية التوجيه." مع صوت تنبيه
+        "laneAssistTakeOver": 8,              # "المساعدة في الحفاظ على المسار: يرجى تولي عملية التوجيه." بصمت
+        "emergencyAssistChangingLanes": 9,    # "المساعدة الطارئة: تغيير المسار..." مع تنبيه عاجل
+        "laneAssistDeactivated": 10,          # "المساعدة في الحفاظ على المسار تم تعطيلها." بصمت مع أيقونة مستمرة بعد ذلك
       }
 
 
@@ -109,41 +109,41 @@ class CANBUS:
 # Exception: SEAT Leon and SEAT Ateca share a chassis code
 
 class CAR:
-  ARTEON_MK1 = "VOLKSWAGEN ARTEON 1ST GEN"          # Chassis AN, Mk1 VW Arteon and variants
-  ATLAS_MK1 = "VOLKSWAGEN ATLAS 1ST GEN"            # Chassis CA, Mk1 VW Atlas and Atlas Cross Sport
-  CRAFTER_MK2 = "VOLKSWAGEN CRAFTER 2ND GEN"        # Chassis SY/SZ, Mk2 VW Crafter, VW Grand California, MAN TGE
-  GOLF_MK7 = "VOLKSWAGEN GOLF 7TH GEN"              # Chassis 5G/AU/BA/BE, Mk7 VW Golf and variants
-  JETTA_MK7 = "VOLKSWAGEN JETTA 7TH GEN"            # Chassis BU, Mk7 VW Jetta
-  PASSAT_MK8 = "VOLKSWAGEN PASSAT 8TH GEN"          # Chassis 3G, Mk8 VW Passat and variants
-  PASSAT_NMS = "VOLKSWAGEN PASSAT NMS"              # Chassis A3, North America/China/Mideast NMS Passat, incl. facelift
-  POLO_MK6 = "VOLKSWAGEN POLO 6TH GEN"              # Chassis AW, Mk6 VW Polo
-  SHARAN_MK2 = "VOLKSWAGEN SHARAN 2ND GEN"          # Chassis 7N, Mk2 Volkswagen Sharan and SEAT Alhambra
-  TAOS_MK1 = "VOLKSWAGEN TAOS 1ST GEN"              # Chassis B2, Mk1 VW Taos and Tharu
-  TCROSS_MK1 = "VOLKSWAGEN T-CROSS 1ST GEN"         # Chassis C1, Mk1 VW T-Cross SWB and LWB variants
-  TIGUAN_MK2 = "VOLKSWAGEN TIGUAN 2ND GEN"          # Chassis AD/BW, Mk2 VW Tiguan and variants
-  TOURAN_MK2 = "VOLKSWAGEN TOURAN 2ND GEN"          # Chassis 1T, Mk2 VW Touran and variants
-  TRANSPORTER_T61 = "VOLKSWAGEN TRANSPORTER T6.1"   # Chassis 7H/7L, T6-facelift Transporter/Multivan/Caravelle/California
-  TROC_MK1 = "VOLKSWAGEN T-ROC 1ST GEN"             # Chassis A1, Mk1 VW T-Roc and variants
-  AUDI_A3_MK3 = "AUDI A3 3RD GEN"                   # Chassis 8V/FF, Mk3 Audi A3 and variants
-  AUDI_Q2_MK1 = "AUDI Q2 1ST GEN"                   # Chassis GA, Mk1 Audi Q2 (RoW) and Q2L (China only)
-  AUDI_Q3_MK2 = "AUDI Q3 2ND GEN"                   # Chassis 8U/F3/FS, Mk2 Audi Q3 and variants
-  SEAT_ATECA_MK1 = "SEAT ATECA 1ST GEN"             # Chassis 5F, Mk1 SEAT Ateca and CUPRA Ateca
-  SEAT_LEON_MK3 = "SEAT LEON 3RD GEN"               # Chassis 5F, Mk3 SEAT Leon and variants
-  SKODA_FABIA_MK4 = "SKODA FABIA 4TH GEN"           # Chassis PJ, Mk4 Skoda Fabia
-  SKODA_KAMIQ_MK1 = "SKODA KAMIQ 1ST GEN"           # Chassis NW, Mk1 Skoda Kamiq
-  SKODA_KAROQ_MK1 = "SKODA KAROQ 1ST GEN"           # Chassis NU, Mk1 Skoda Karoq
-  SKODA_KODIAQ_MK1 = "SKODA KODIAQ 1ST GEN"         # Chassis NS, Mk1 Skoda Kodiaq
-  SKODA_SCALA_MK1 = "SKODA SCALA 1ST GEN"           # Chassis NW, Mk1 Skoda Scala and Skoda Kamiq
-  SKODA_SUPERB_MK3 = "SKODA SUPERB 3RD GEN"         # Chassis 3V/NP, Mk3 Skoda Superb and variants
-  SKODA_OCTAVIA_MK3 = "SKODA OCTAVIA 3RD GEN"       # Chassis NE, Mk3 Skoda Octavia and variants
+  ARTEON_MK1 = "فولكس فاجن أرتيون الجيل الأول"         # هيكل AN، الجيل الأول من فولكس فاجن أرتيون ومشتقاتها
+  ATLAS_MK1 = "فولكس فاجن أطلس الجيل الأول"            # هيكل CA، الجيل الأول من فولكس فاجن أطلس وأطلس كروس سبورت
+  CRAFTER_MK2 = "فولكس فاجن كرافتير الجيل الثاني"    # هيكل SY/SZ، الجيل الثاني من فولكس فاجن كرافتير، فولكس فاجن جراند كاليفورنيا، MAN TGE
+  GOLF_MK7 = "فولكس فاجن جولف الجيل السابع"          # هيكل 5G/AU/BA/BE، الجيل السابع من فولكس فاجن جولف ومشتقاتها
+  JETTA_MK7 = "فولكس فاجن جيتا الجيل السابع"         # هيكل BU، الجيل السابع من فولكس فاجن جيتا
+  PASSAT_MK8 = "فولكس فاجن باسات الجيل الثامن"       # هيكل 3G، الجيل الثامن من فولكس فاجن باسات ومشتقاتها
+  PASSAT_NMS = "فولكس فاجن باسات NMS"                 # هيكل A3، باسات NMS لأمريكا الشمالية/الصين/الشرق الأوسط، يشمل الفيس ليفت
+  POLO_MK6 = "فولكس فاجن بولو الجيل السادس"          # هيكل AW، الجيل السادس من فولكس فاجن بولو
+  SHARAN_MK2 = "فولكس فاجن شاران الجيل الثاني"       # هيكل 7N، الجيل الثاني من فولكس فاجن شاران وسيات ألهامبرا
+  TAOS_MK1 = "فولكس فاجن تاوس الجيل الأول"            # هيكل B2، الجيل الأول من فولكس فاجن تاوس وثارو
+  TCROSS_MK1 = "فولكس فاجن تي-كروس الجيل الأول"       # هيكل C1، الجيل الأول من فولكس فاجن تي-كروس المتغيرات القصيرة والطويلة
+  TIGUAN_MK2 = "فولكس فاجن تيغوان الجيل الثاني"      # هيكل AD/BW، الجيل الثاني من فولكس فاجن تيغوان ومشتقاتها
+  TOURAN_MK2 = "فولكس فاجن توران الجيل الثاني"       # هيكل 1T، الجيل الثاني من فولكس فاجن توران ومشتقاتها
+  TRANSPORTER_T61 = "فولكس فاجن ترانسبورتر T6.1"      # هيكل 7H/7L، الجيل المعاد تصميمه من فولكس فاجن ترانسبورتر/مولتيفان/كارافيل/كاليفورنيا
+  TROC_MK1 = "فولكس فاجن تي-روك الجيل الأول"          # هيكل A1، الجيل الأول من فولكس فاجن تي-روك ومشتقاتها
+  AUDI_A3_MK3 = "أودي A3 الجيل الثالث"                # هيكل 8V/FF، الجيل الثالث من أودي A3 ومشتقاتها
+  AUDI_Q2_MK1 = "أودي Q2 الجيل الأول"                  # هيكل GA، الجيل الأول من أودي Q2 (بقية العالم) وQ2L (للصين فقط)
+  AUDI_Q3_MK2 = "أودي Q3 الجيل الثاني"               # هيكل 8U/F3/FS، الجيل الثاني من أودي Q3 ومشتقاتها
+  SEAT_ATECA_MK1 = "سيات أتيكا الجيل الأول"           # هيكل 5F، الجيل الأول من سيات أتيكا وكوبرا أتيكا
+  SEAT_LEON_MK3 = "سيات ليون الجيل الثالث"           # هيكل 5F، الجيل الثالث من سيات ليون ومشتقاتها
+  SKODA_FABIA_MK4 = "سكودا فابيا الجيل الرابع"       # هيكل PJ، الجيل الرابع من سكودا فابيا
+  SKODA_KAMIQ_MK1 = "سكودا كاميك الجيل الأول"         # هيكل NW، الجيل الأول من سكودا كاميك
+  SKODA_KAROQ_MK1 = "سكودا كاروك الجيل الأول"         # هيكل NU، الجيل الأول من سكودا كاروك
+  SKODA_KODIAQ_MK1 = "سكودا كودياك الجيل الأول"       # هيكل NS، الجيل الأول من سكودا كودياك
+  SKODA_SCALA_MK1 = "سكودا سكالا الجيل الأول"          # هيكل NW، الجيل الأول من سكودا سكالا وسكودا كاميك
+  SKODA_SUPERB_MK3 = "سكودا سوبيرب الجيل الثالث"     # هيكل 3V/NP، الجيل الثالث من سكودا سوبيرب ومشتقاتها
+  SKODA_OCTAVIA_MK3 = "سكودا أوكتافيا الجيل الثالث"  # هيكل NE، الجيل الثالث من سكودا أوكتافيا ومشتقاتها
 
 
-# CARs based on the PQ35/PQ46/NMS platforms and using PQ-style CAN messaging (default is MQB)
+# السيارات المبنية على منصات PQ35/PQ46/NMS والتي تستخدم رسائل CAN بنمط PQ (الإعداد الافتراضي هو MQB)
 PQ_CARS = {CAR.PASSAT_NMS, CAR.SHARAN_MK2}
 
-# CARs that benefit from continuous Resume spam at a stop, effectively upgrading stock FtS to SnG
-# Appears to be MQB-A0s and the Transporter family
-# TODO: try to determine this from ABS firmware instead
+# السيارات التي تستفيد من إرسال مستمر لأمر الاستئناف أثناء التوقف، مما يطور FtS الأصلي إلى SnG
+# يبدو أن ذلك يشمل سيارات MQB-A0 وعائلة Transporter
+# ملاحظة: حاول تحديد ذلك من خلال برنامج ABS الثابت بدلاً من ذلك
 STANDING_RESUME_SPAM_CARS = {CAR.POLO_MK6, CAR.TCROSS_MK1, CAR.TROC_MK1, CAR.SKODA_KAMIQ_MK1,
                              CAR.SKODA_SCALA_MK1, CAR.TRANSPORTER_T61}
 
@@ -260,14 +260,14 @@ CAR_INFO: Dict[str, Union[VWCarInfo, List[VWCarInfo]]] = {
 }
 
 
-# All supported cars should return FW from the engine, srs, eps, and fwdRadar. Cars
-# with a manual trans won't return transmission firmware, but all other cars will.
+# يجب أن تعود جميع السيارات المدعومة بمعلومات FW من المحرك، ونظام SRS، ونظام EPS، ورادار FWD.
+# السيارات ذات ناقل الحركة اليدوي لن تعيد البرنامج الثابت لناقل الحركة، ولكن جميع السيارات الأخرى ستقوم بذلك.
 #
-# The 0xF187 SW part number query should return in the form of N[NX][NX] NNN NNN [X[X]],
-# where N=number, X=letter, and the trailing two letters are optional. Performance
-# tuners sometimes tamper with that field (e.g. 8V0 9C0 BB0 1 from COBB/EQT). Tampered
-# ECU SW part numbers are invalid for vehicle ID and compatibility checks. Try to have
-# them repaired by the tuner before including them in openpilot.
+# استعلام الرقم التسلسلي للبرنامج 0xF187 يجب أن يعود بالشكل N[NX][NX] NNN NNN [X[X]]،
+# حيث N = رقم، X = حرف، والحرفان الأخيران اختياريان. 
+# بعض معدلي الأداء يعبثون بهذا الحقل (على سبيل المثال: 8V0 9C0 BB0 1 من COBB/EQT).
+# أرقام البرامج الثابتة المعدلة لوحدة التحكم الإلكترونية (ECU) غير صالحة لتحديد هوية السيارة وفحوصات التوافق.
+# حاول إصلاحها من قبل المعدل قبل تضمينها في openpilot.
 
 VOLKSWAGEN_VERSION_REQUEST_MULTI = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
   p16(uds.DATA_IDENTIFIER_TYPE.VEHICLE_MANUFACTURER_SPARE_PART_NUMBER) + \
@@ -376,9 +376,9 @@ FW_VERSIONS = {
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x8704L906056EK\xf1\x896391',
     ],
-    # Only current upstreamed vehicle has a manual transmission
-    #(Ecu.transmission, 0x7e1, None): [
-    #],
+    # السيارة الوحيدة التي تم دمجها حالياً وتحتوي على ناقل حركة يدوي
+    # (Ecu.transmission, 0x7e1, None): [
+    # ],
     (Ecu.srs, 0x715, None): [
       b'\xf1\x873Q0959655BG\xf1\x890703\xf1\x82\x0e16120016130012051G1313052900',
     ],
@@ -692,7 +692,7 @@ FW_VERSIONS = {
     ],
   },
   CAR.SHARAN_MK2: {
-    # TODO: Sharan Mk2 EPS and DQ250 auto trans both require KWP2000 support for fingerprinting
+    # ملاحظة: شاحنة Sharan Mk2 بنظام EPS وناقل الحركة الأوتوماتيكي DQ250 يتطلبان دعم KWP2000 لتحديد البصمة
     (Ecu.engine, 0x7e0, None): [
       b'\xf1\x8704L906016HE\xf1\x894635',
     ],

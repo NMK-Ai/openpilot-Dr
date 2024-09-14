@@ -13,12 +13,12 @@ Ecu = car.CarParams.Ecu
 
 class CarControllerParams:
   def __init__(self, CP):
-    self.STEER_STEP = 2                # how often we update the steer cmd
-    self.STEER_DELTA_UP = 50           # torque increase per refresh, 0.8s to max
-    self.STEER_DELTA_DOWN = 70         # torque decrease per refresh
-    self.STEER_DRIVER_ALLOWANCE = 60   # allowed driver torque before start limiting
-    self.STEER_DRIVER_MULTIPLIER = 50  # weight driver torque heavily
-    self.STEER_DRIVER_FACTOR = 1       # from dbc
+    self.STEER_STEP = 2                # عدد مرات تحديث أمر التوجيه
+    self.STEER_DELTA_UP = 50           # زيادة العزم في كل تحديث، 0.8 ثانية للوصول إلى القيمة القصوى
+    self.STEER_DELTA_DOWN = 70         # تقليل العزم في كل تحديث
+    self.STEER_DRIVER_ALLOWANCE = 60   # العزم المسموح للسائق قبل بدء التقييد
+    self.STEER_DRIVER_MULTIPLIER = 50  # زيادة تأثير عزم السائق بشكل كبير
+    self.STEER_DRIVER_FACTOR = 1       # مستخرج من dbc
 
     if CP.carFingerprint in GLOBAL_GEN2:
       self.STEER_MAX = 1000
@@ -31,20 +31,19 @@ class CarControllerParams:
 
 
 class CAR:
-  # Global platform
-  ASCENT = "SUBARU ASCENT LIMITED 2019"
-  IMPREZA = "SUBARU IMPREZA LIMITED 2019"
-  IMPREZA_2020 = "SUBARU IMPREZA SPORT 2020"
-  FORESTER = "SUBARU FORESTER 2019"
-  OUTBACK = "SUBARU OUTBACK 6TH GEN"
-  LEGACY = "SUBARU LEGACY 7TH GEN"
+# منصة عالمية
+  ASCENT = "سوبارو أسينت ليميتد 2019"
+  IMPREZA = "سوبارو إمبريزا ليميتد 2019"
+  IMPREZA_2020 = "سوبارو إمبريزا سبورت 2020"
+  FORESTER = "سوبارو فورستر 2019"
+  OUTBACK = "سوبارو أوتباك الجيل السادس"
+  LEGACY = "سوبارو ليجاسي الجيل السابع"
 
-  # Pre-global
-  FORESTER_PREGLOBAL = "SUBARU FORESTER 2017 - 2018"
-  LEGACY_PREGLOBAL = "SUBARU LEGACY 2015 - 2018"
-  OUTBACK_PREGLOBAL = "SUBARU OUTBACK 2015 - 2017"
-  OUTBACK_PREGLOBAL_2018 = "SUBARU OUTBACK 2018 - 2019"
-
+# قبل العالمية
+  FORESTER_PREGLOBAL = "سوبارو فورستر 2017 - 2018"
+  LEGACY_PREGLOBAL = "سوبارو ليجاسي 2015 - 2018"
+  OUTBACK_PREGLOBAL = "سوبارو أوتباك 2015 - 2017"
+  OUTBACK_PREGLOBAL_2018 = "سوبارو أوتباك 2018 - 2019"
 
 @dataclass
 class SubaruCarInfo(CarInfo):
