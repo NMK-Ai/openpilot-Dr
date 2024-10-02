@@ -222,7 +222,7 @@ class CarState(CarStateBase):
 
     cp_acc = cp_cam if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR) else cp
 
-    إذا كانت بصمة السيارة ضمن (TSS2_CAR | RADAR_ACC_CAR):
+    if self.CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR):
       self.acc_type = cp_acc.vl["ACC_CONTROL"]["ACC_TYPE"]
       ret.stockFcw = bool(cp_acc.vl["ACC_HUD"]["FCW"])
 
@@ -235,7 +235,7 @@ class CarState(CarStateBase):
       self.low_speed_lockout = cp.vl["PCM_CRUISE_2"]["LOW_SPEED_LOCKOUT"] == 2
 
     self.pcm_acc_status = cp.vl["PCM_CRUISE"]["CRUISE_STATE"]
-    إذا لم تكن بصمة السيارة ضمن (NO_STOP_TIMER_CAR - TSS2_CAR):
+    if self.CP.carFingerprint not in (NO_STOP_TIMER_CAR - TSS2_CAR):
       # تجاهل حالة التوقف التام في بعض السيارات، لأن PCM يسمح بإعادة التشغيل بمجرد طلب التسارع
       ret.cruiseState.standstill = self.pcm_acc_status == 7
     ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"])
