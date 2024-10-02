@@ -96,7 +96,7 @@ class CAR:
 
 class Footnote(Enum):
   CAMRY = CarFootnote(
-    "يعمل القائد الآلي بسرعات تزيد عن 28 ميل/ساعة لسيارات Camry 4CYL L و 4CYL LE و 4CYL SE التي لا تحتوي على نظام التحكم بالرادار الديناميكي للسرعات الكاملة."
+    "openpilot operates above 28mph for Camry 4CYL L, 4CYL LE and 4CYL SE which don't have Full-Speed Range Dynamic Radar Cruise Control.",
     Column.FSR_LONGITUDINAL)
 
 
