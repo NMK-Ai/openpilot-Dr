@@ -271,18 +271,18 @@ class CarInterface(CarInterfaceBase):
     # الأحداث
     events = self.create_common_events(ret)
 
-    إذا كان التحكم الطولي في openpilot مفعلًا في هذا السيارة:
-      إذا كان ret.cruiseState.standstill ولم يتم الضغط على الفرامل ولم يتم تفعيل جهاز اعتراض الوقود:
+    if self.CP.openpilotLongitudinalControl:
+      if ret.cruiseState.standstill and not ret.brakePressed and not self.CP.enableGasInterceptor:
         events.add(EventName.resumeRequired)
-      إذا كانت self.CS.low_speed_lockout:
+      if self.CS.low_speed_lockout:
         events.add(EventName.lowSpeedLockout)
-      إذا كانت سرعة ret.vEgo أقل من الحد الأدنى للسرعة للتفعيل:
+      if ret.vEgo < self.CP.minEnableSpeed:
         events.add(EventName.belowEngageSpeed)
-        إذا كان تسارع c.actuators.accel أكبر من 0.3:
-          # بعض الهامش على المحرك لتجنب التفعيل الزائف للإلغاء أثناء التوقف
+        if c.actuators.accel > 0.3:
+          # some margin on the actuator to not false trigger cancellation while stopping
           events.add(EventName.speedTooLow)
-        إذا كانت سرعة ret.vEgo أقل من 0.001:
-          # أثناء التوقف التام، يتم إرسال تنبيه للمستخدم
+        if ret.vEgo < 0.001:
+          # while in standstill, send a user alert
           events.add(EventName.manualRestart)
 
     ret.events = events.to_msg()
