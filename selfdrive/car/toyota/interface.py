@@ -245,7 +245,7 @@ class CarInterface(CarInterfaceBase):
       tune.kpV = [1.3, 1.0, 0.7]
       tune.kiBP = [0., 3., 4., 5., 12., 20., 23., 40.]
       tune.kiV = [.08, .16, .26, .215, .20, .166, .1, .006]
-      إذا كانت السيارة مرشحة ضمن TSS2_CAR:
+      if candidate in TSS2_CAR:
         # ret.vEgoStopping = 0.3  # السيارة تكون بين 0.1 إلى 0.2 عندما تبدأ السيارة في طلب التسارع المتوقف
         ret.vEgoStarting = 0.1  # يجب أن تكون أكبر أو تساوي vEgoStopping
         # ret.stopAccel = -0.1  # تطلب تويوتا -0.4 عند التوقف
