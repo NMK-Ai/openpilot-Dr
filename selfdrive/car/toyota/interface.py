@@ -240,7 +240,7 @@ class CarInterface(CarInterfaceBase):
     tune = ret.longitudinalTuning
     tune.deadzoneBP = [0., 9.]
     tune.deadzoneV = [.0, .15]
-    إذا كانت السيارة مرشحة ضمن TSS2_CAR أو ret.enableGasInterceptor:
+    if candidate in TSS2_CAR or ret.enableGasInterceptor:
       tune.kpBP = [0., 5., 20.]
       tune.kpV = [1.3, 1.0, 0.7]
       tune.kiBP = [0., 3., 4., 5., 12., 20., 23., 40.]
