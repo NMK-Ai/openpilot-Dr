@@ -1,8 +1,20 @@
 #!/bin/sh
 
+# تحقق من وجود الملف /TICI
 if [ -f /TICI ] && [ ! -f qt/spinner ]; then
+  echo "نسخ ملف spinner_larch64 إلى spinner..."
   cp qt/spinner_larch64 qt/spinner
+  
+  if [ $? -eq 0 ]; then
+    echo "تم النسخ بنجاح."
+  else
+    echo "فشل في نسخ الملف."
+    exit 1
+  fi
 fi
 
+# تعيين مسار المكتبات
 export LD_LIBRARY_PATH="/system/lib64:$LD_LIBRARY_PATH"
-exec ./qt/spinner "$1"
+
+# لا تقم بتشغيل qt/spinner
+echo "تم تثبيت spinner. يمكنك تشغيله لاحقًا."
