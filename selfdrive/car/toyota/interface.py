@@ -235,7 +235,7 @@ class CarInterface(CarInterfaceBase):
 
     # الحد الأدنى للسرعة لتفعيل ACC. إذا كانت السيارة تدعم التوقف والانطلاق، فقم بتعيين سرعة التفعيل
     # إلى قيمة سالبة، لذلك لن تهم.
-    ret.minEnableSpeed = -1. إذا كانت (stop_and_go أو ret.enableGasInterceptor) وإلا MIN_ACC_SPEED
+    ret.minEnableSpeed = -1. if (stop_and_go or ret.enableGasInterceptor) else MIN_ACC_SPEED
 
     tune = ret.longitudinalTuning
     tune.deadzoneBP = [0., 9.]
