@@ -24,30 +24,30 @@ class CarController:
 
     lkas_active = CC.latActive and self.lkas_control_bit_prev
 
-    # cruise buttons
+    # أزرار مثبت السرعة
     if (self.frame - self.last_button_frame)*DT_CTRL > 0.05:
       das_bus = 2 if self.CP.carFingerprint in RAM_CARS else 0
 
-      # ACC cancellation
+      # إلغاء مثبت السرعة (ACC)
       if CC.cruiseControl.cancel:
         self.last_button_frame = self.frame
         can_sends.append(create_cruise_buttons(self.packer, CS.button_counter + 1, das_bus, cancel=True))
 
-      # ACC resume from standstill
+      # استئناف مثبت السرعة (ACC) من التوقف التام
       elif CC.cruiseControl.resume:
         self.last_button_frame = self.frame
         can_sends.append(create_cruise_buttons(self.packer, CS.button_counter + 1, das_bus, resume=True))
 
-    # HUD alerts
+    # تنبيهات شاشة العرض (HUD)
     if self.frame % 25 == 0:
       if CS.lkas_car_model != -1:
         can_sends.append(create_lkas_hud(self.packer, self.CP, lkas_active, CC.hudControl.visualAlert, self.hud_count, CS.lkas_car_model, CS.auto_high_beam))
         self.hud_count += 1
 
-    # steering
+    # التوجيه
     if self.frame % self.params.STEER_STEP == 0:
 
-      # TODO: can we make this more sane? why is it different for all the cars?
+      # TODO: هل يمكننا جعل هذا أكثر منطقية؟ لماذا هو مختلف لكل السيارات؟
       lkas_control_bit = self.lkas_control_bit_prev
       if CS.out.vEgo > self.CP.minSteerSpeed:
         lkas_control_bit = True
@@ -58,14 +58,14 @@ class CarController:
         if CS.out.vEgo < (self.CP.minSteerSpeed - 0.5):
           lkas_control_bit = False
 
-      # EPS faults if LKAS re-enables too quickly
+      # تحدث أخطاء EPS إذا تم إعادة تفعيل LKAS بسرعة كبيرة
       lkas_control_bit = lkas_control_bit and (self.frame - self.last_lkas_falling_edge > 200)
 
       if not lkas_control_bit and self.lkas_control_bit_prev:
         self.last_lkas_falling_edge = self.frame
       self.lkas_control_bit_prev = lkas_control_bit
 
-      # steer torque
+      # عزم دوران التوجيه
       new_steer = int(round(CC.actuators.steer * self.params.STEER_MAX))
       apply_steer = apply_meas_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorqueEps, self.params)
       if not lkas_active or not lkas_control_bit:

@@ -25,22 +25,22 @@ class CarState(CarStateBase):
 
     ret = car.CarState.new_message()
 
-    # lock info
+    # معلومات القفل
     ret.doorOpen = any([cp.vl["BCM_1"]["DOOR_OPEN_FL"],
                         cp.vl["BCM_1"]["DOOR_OPEN_FR"],
                         cp.vl["BCM_1"]["DOOR_OPEN_RL"],
                         cp.vl["BCM_1"]["DOOR_OPEN_RR"]])
     ret.seatbeltUnlatched = cp.vl["ORC_1"]["SEATBELT_DRIVER_UNLATCHED"] == 1
 
-    # brake pedal
+    # دواسة الفرامل
     ret.brake = 0
     ret.brakePressed = cp.vl["ESP_1"]['Brake_Pedal_State'] == 1  # Physical brake pedal switch
 
-    # gas pedal
+    # دواسة البنزين
     ret.gas = cp.vl["ECM_5"]["Accelerator_Position"]
     ret.gasPressed = ret.gas > 1e-5
 
-    # car speed
+    # سرعة السيارة
     if self.CP.carFingerprint in RAM_CARS:
       ret.vEgoRaw = cp.vl["ESP_8"]["Vehicle_Speed"] * CV.KPH_TO_MS
       ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(cp.vl["Transmission_Status"]["Gear_State"], None))
@@ -57,19 +57,19 @@ class CarState(CarStateBase):
       unit=1,
     )
 
-    # button presses
+    # الضغط على الأزرار
     ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_stalk(200, cp.vl["STEERING_LEVERS"]["TURN_SIGNALS"] == 1,
                                                                        cp.vl["STEERING_LEVERS"]["TURN_SIGNALS"] == 2)
     ret.genericToggle = cp.vl["STEERING_LEVERS"]["HIGH_BEAM_PRESSED"] == 1
 
-    # steering wheel
+    # عجلة القيادة
     ret.steeringAngleDeg = cp.vl["STEERING"]["STEERING_ANGLE"] + cp.vl["STEERING"]["STEERING_ANGLE_HP"]
     ret.steeringRateDeg = cp.vl["STEERING"]["STEERING_RATE"]
     ret.steeringTorque = cp.vl["EPS_2"]["COLUMN_TORQUE"]
     ret.steeringTorqueEps = cp.vl["EPS_2"]["EPS_TORQUE_MOTOR"]
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
-    # cruise state
+    # حالة مثبت السرعة
     cp_cruise = cp_cam if self.CP.carFingerprint in RAM_CARS else cp
 
     ret.cruiseState.available = cp_cruise.vl["DAS_3"]["ACC_AVAILABLE"] == 1
@@ -80,13 +80,13 @@ class CarState(CarStateBase):
     ret.accFaulted = cp_cruise.vl["DAS_3"]["ACC_FAULTED"] != 0
 
     if self.CP.carFingerprint in RAM_CARS:
-      self.auto_high_beam = cp_cam.vl["DAS_6"]['AUTO_HIGH_BEAM_ON']  # Auto High Beam isn't Located in this message on chrysler or jeep currently located in 729 message
+      self.auto_high_beam = cp_cam.vl["DAS_6"]['AUTO_HIGH_BEAM_ON']  # الشعاع العالي التلقائي غير موجود في هذه الرسالة على سيارات كرايسلر أو جيب، حاليًا موجود في الرسالة 729
       ret.steerFaultTemporary = cp.vl["EPS_3"]["DASM_FAULT"] == 1
     else:
       ret.steerFaultTemporary = cp.vl["EPS_2"]["LKAS_TEMPORARY_FAULT"] == 1
       ret.steerFaultPermanent = cp.vl["EPS_2"]["LKAS_STATE"] == 4
 
-    # blindspot sensors
+    # حساسات النقطة العمياء
     if self.CP.enableBsm:
       ret.leftBlindspot = cp.vl["BSM_1"]["LEFT_STATUS"] == 1
       ret.rightBlindspot = cp.vl["BSM_1"]["RIGHT_STATUS"] == 1
@@ -116,7 +116,7 @@ class CarState(CarStateBase):
   @staticmethod
   def get_can_parser(CP):
     signals = [
-      # sig_name, sig_address
+      # اسم الإشارة، عنوان الإشارة
       ("DOOR_OPEN_FL", "BCM_1"),
       ("DOOR_OPEN_FR", "BCM_1"),
       ("DOOR_OPEN_RL", "BCM_1"),
@@ -142,7 +142,7 @@ class CarState(CarStateBase):
     ]
 
     checks = [
-      # sig_address, frequency
+      # عنوان الإشارة، التردد
       ("ESP_1", 50),
       ("EPS_2", 100),
       ("ESP_6", 50),
@@ -190,7 +190,7 @@ class CarState(CarStateBase):
   @staticmethod
   def get_cam_can_parser(CP):
     signals = [
-      # sig_name, sig_address, default
+      # اسم الإشارة، عنوان الإشارة، القيمة الافتراضية
       ("CAR_MODEL", "DAS_6"),
     ]
     checks = [

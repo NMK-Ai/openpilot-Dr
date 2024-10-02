@@ -5,27 +5,27 @@ GearShifter = car.CarState.GearShifter
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 def create_lkas_hud(packer, CP, lkas_active, hud_alert, hud_count, car_model, auto_high_beam):
-  # LKAS_HUD - Controls what lane-keeping icon is displayed
+  # LKAS_HUD - يتحكم في الأيقونة التي تظهر للحفاظ على المسار
 
-  # == Color ==
-  # 0 hidden?
-  # 1 white
-  # 2 green
-  # 3 ldw
+  # == اللون ==
+  # 0 مخفي؟
+  # 1 أبيض
+  # 2 أخضر
+  # 3 مغادرة المسار (ldw)
 
-  # == Lines ==
-  # 03 white Lines
-  # 04 grey lines
-  # 09 left lane close
-  # 0A right lane close
-  # 0B left Lane very close
-  # 0C right Lane very close
-  # 0D left cross cross
-  # 0E right lane cross
+  # == الخطوط ==
+  # 03 خطوط بيضاء
+  # 04 خطوط رمادية
+  # 09 المسار الأيسر قريب
+  # 0A المسار الأيمن قريب
+  # 0B المسار الأيسر قريب جدًا
+  # 0C المسار الأيمن قريب جدًا
+  # 0D تقاطع المسار الأيسر
+  # 0E تقاطع المسار الأيمن
 
-  # == Alerts ==
-  # 7 Normal
-  # 6 lane departure place hands on wheel
+  # == التنبيهات ==
+  # 7 عادي
+  # 6 مغادرة المسار، ضع يديك على عجلة القيادة
 
   color = 2 if lkas_active else 1
   lines = 3 if lkas_active else 0
@@ -53,7 +53,7 @@ def create_lkas_hud(packer, CP, lkas_active, hud_alert, hud_count, car_model, au
 
 
 def create_lkas_command(packer, CP, apply_steer, lkas_control_bit):
-  # LKAS_COMMAND Lane-keeping signal to turn the wheel
+  # LKAS_COMMAND إشارة الحفاظ على المسار لتدوير عجلة القيادة
   enabled_val = 2 if CP.carFingerprint in RAM_CARS else 1
   values = {
     "STEERING_TORQUE": apply_steer,

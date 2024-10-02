@@ -12,9 +12,9 @@ SPEED_FROM_RPM = 0.008587
 
 class CarControllerParams:
   ANGLE_DELTA_BP = [0., 5., 15.]
-  ANGLE_DELTA_V = [5., .8, .15]     # windup limit
-  ANGLE_DELTA_VU = [5., 3.5, 0.4]   # unwind limit
-  LKAS_MAX_TORQUE = 1               # A value of 1 is easy to overpower
+  ANGLE_DELTA_V = [5., .8, .15]     # حد التراكم
+  ANGLE_DELTA_VU = [5., 3.5, 0.4]   # حد التفريغ
+  LKAS_MAX_TORQUE = 1               # قيمة 1 سهلة التغلب عليها
   STEER_THRESHOLD = 1.0
 
   def __init__(self, CP):
@@ -52,7 +52,7 @@ FW_VERSIONS = {
       b'02/27/2022',
       b'0.3.00a',
     ],
-    # git hash of the firmware used
+    # تجزئة git للبرمجيات المستخدمة
     (Ecu.debug, 0x721, None): [
       b'166bd860',
       b'dc780f85',

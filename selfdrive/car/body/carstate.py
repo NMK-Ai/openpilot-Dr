@@ -23,7 +23,7 @@ class CarState(CarStateBase):
     ret.charging = cp.vl["BODY_DATA"]["CHARGER_CONNECTED"] == 1
     ret.fuelGauge = cp.vl["BODY_DATA"]["BATT_PERCENTAGE"] / 100
 
-    # irrelevant for non-car
+    # غير مهم لغير السيارات
     ret.gearShifter = car.CarState.GearShifter.drive
     ret.cruiseState.enabled = True
     ret.cruiseState.available = True
@@ -33,7 +33,7 @@ class CarState(CarStateBase):
   @staticmethod
   def get_can_parser(CP):
     signals = [
-      # sig_name, sig_address
+      # اسم الإشارة، عنوان الإشارة
       ("SPEED_L", "MOTORS_DATA"),
       ("SPEED_R", "MOTORS_DATA"),
       ("ELEC_ANGLE_L", "MOTORS_DATA"),

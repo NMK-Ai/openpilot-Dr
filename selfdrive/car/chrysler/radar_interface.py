@@ -25,13 +25,13 @@ def _create_radar_can_parser(car_fingerprint):
   signals = list(zip(['LONG_DIST'] * msg_n +
                      ['LAT_DIST'] * msg_n +
                      ['REL_SPEED'] * msg_n,
-                     RADAR_MSGS_C * 2 +  # LONG_DIST, LAT_DIST
-                     RADAR_MSGS_D))  # REL_SPEED
+                     RADAR_MSGS_C * 2 +  # المسافة الطولية (LONG_DIST)، المسافة العرضية (LAT_DIST)
+                     RADAR_MSGS_D))  # السرعة النسبية (REL_SPEED)
 
   checks = list(zip(RADAR_MSGS_C +
                     RADAR_MSGS_D,
-                    [20] * msg_n +  # 20Hz (0.05s)
-                    [20] * msg_n))  # 20Hz (0.05s)
+                    [20] * msg_n +  # 20 هرتز (0.05 ثانية)
+                    [20] * msg_n))  # 20 هرتز (0.05 ثانية)
 
   return CANParser(DBC[car_fingerprint]['radar'], signals, checks, 1)
 
@@ -66,7 +66,7 @@ class RadarInterface(RadarInterfaceBase):
       errors.append("canError")
     ret.errors = errors
 
-    for ii in self.updated_messages:  # ii should be the message ID as a number
+    for ii in self.updated_messages:  # ii يجب أن يكون معرف الرسالة كرقم
       cpt = self.rcp.vl[ii]
       trackId = _address_to_track(ii)
 
@@ -77,15 +77,15 @@ class RadarInterface(RadarInterfaceBase):
         self.pts[trackId].yvRel = float('nan')
         self.pts[trackId].measured = True
 
-      if 'LONG_DIST' in cpt:  # c_* message
-        self.pts[trackId].dRel = cpt['LONG_DIST']  # from front of car
-        # our lat_dist is positive to the right in car's frame.
-        # TODO what does yRel want?
-        self.pts[trackId].yRel = cpt['LAT_DIST']  # in car frame's y axis, left is positive
-      else:  # d_* message
+      if 'LONG_DIST' in cpt:  # رسالة c_*
+        self.pts[trackId].dRel = cpt['LONG_DIST']  # المسافة من مقدمة السيارة
+        # المسافة العرضية لدينا موجبة باتجاه اليمين في إطار السيارة.
+        # TODO ماذا تعني yRel؟
+        self.pts[trackId].yRel = cpt['LAT_DIST']  # في محور y لإطار السيارة، اليسار موجب
+      else:  # رسالة d_*
         self.pts[trackId].vRel = cpt['REL_SPEED']
 
-    # We want a list, not a dictionary. Filter out LONG_DIST==0 because that means it's not valid.
+    # نريد قائمة، وليس قاموسًا. تجاهل LONG_DIST==0 لأنه يعني أنها غير صالحة.
     ret.points = [x for x in self.pts.values() if x.dRel != 0]
 
     self.updated_messages.clear()

@@ -28,7 +28,7 @@ def create_lta_steer_command(packer, steer, steer_req, raw_cnt):
 
 
 def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead, acc_type, distance, dp_toyota_change5speed):
-  # TODO: find the exact canceling bit that does not create a chime
+  # TODO: ابحث عن البت الدقيق للإلغاء الذي لا يصدر صوت إنذار
   values = {
     "ACCEL_CMD": accel,
     "ACC_TYPE": acc_type,
@@ -74,7 +74,7 @@ def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_dep
     "LEFT_LINE": 3 if left_lane_depart else 1 if left_line else 2,
     "BARRIERS": 1 if enabled else 0,
 
-    # static signals
+    # إشارات ثابتة
     "SET_ME_X02": 2,
     "SET_ME_X01": 1,
     "LKAS_STATUS": 1,
@@ -97,8 +97,8 @@ def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_dep
     "LDW_EXIST": 1,
   }
 
-  # lane sway functionality
-  # not all cars have LKAS_HUD — update with camera values if available
+  # وظيفة تمايل المسار
+  # ليست كل السيارات تحتوي على LKAS_HUD — قم بالتحديث باستخدام قيم الكاميرا إذا كانت متوفرة
   values.update(stock_lkas_hud)
 
   return packer.make_can_msg("LKAS_HUD", 0, values)

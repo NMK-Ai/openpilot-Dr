@@ -14,7 +14,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.body)]
 
     ret.minSteerSpeed = -math.inf
-    ret.maxLateralAccel = math.inf  # TODO: set to a reasonable value
+    ret.maxLateralAccel = math.inf  # TODO: ضبط القيمة إلى قيمة معقولة
     ret.steerRatio = 0.5
     ret.steerLimitTimer = 1.0
     ret.steerActuatorDelay = 0.
@@ -33,9 +33,9 @@ class CarInterface(CarInterfaceBase):
   def _update(self, c):
     ret = self.CS.update(self.cp)
 
-    # wait for everything to init first
+    # الانتظار حتى يتم تهيئة كل شيء أولاً
     if self.frame > int(5. / DT_CTRL):
-      # body always wants to enable
+      # الهيكل يريد دائمًا التفعيل
       ret.init('events', 1)
       ret.events[0].name = car.CarEvent.EventName.pcmEnable
       ret.events[0].enable = True

@@ -30,23 +30,23 @@ class CarController:
     main_on = CS.out.cruiseState.available
     steer_alert = hud_control.visualAlert in (VisualAlert.steerRequired, VisualAlert.ldw)
 
-    ### acc buttons ###
+    ### أزرار مثبت السرعة (ACC) ###
     if CC.cruiseControl.cancel:
       can_sends.append(create_button_msg(self.packer, CS.buttons_stock_values, cancel=True))
       can_sends.append(create_button_msg(self.packer, CS.buttons_stock_values, cancel=True, bus=CANBUS.main))
     elif CC.cruiseControl.resume and (self.frame % CarControllerParams.BUTTONS_STEP) == 0:
       can_sends.append(create_button_msg(self.packer, CS.buttons_stock_values, resume=True))
       can_sends.append(create_button_msg(self.packer, CS.buttons_stock_values, resume=True, bus=CANBUS.main))
-    # if stock lane centering isn't off, send a button press to toggle it off
-    # the stock system checks for steering pressed, and eventually disengages cruise control
+    # إذا لم يتم إيقاف نظام الحفاظ على المسار الأساسي، أرسل إشارة زر لتعطيله
+    # النظام الأساسي يتحقق من وجود ضغط على عجلة القيادة، ويقوم في النهاية بإيقاف مثبت السرعة
     elif CS.acc_tja_status_stock_values["Tja_D_Stat"] != 0 and (self.frame % CarControllerParams.ACC_UI_STEP) == 0:
       can_sends.append(create_button_msg(self.packer, CS.buttons_stock_values, tja_toggle=True))
 
-    ### lateral control ###
-    # send steering commands at 20Hz
+    ### التحكم الجانبي ###
+    # إرسال أوامر التوجيه بسرعة 20 هرتز
     if (self.frame % CarControllerParams.STEER_STEP) == 0:
       if CC.latActive:
-        # apply limits to curvature and clip to signal range
+        # تطبيق الحدود على الانحناء وقصه وفقًا لنطاق الإشارة
         apply_curvature = apply_std_steer_angle_limits(actuators.curvature, self.apply_curvature_last, CS.out.vEgo, CarControllerParams)
         apply_curvature = clip(apply_curvature, -CarControllerParams.CURVATURE_MAX, CarControllerParams.CURVATURE_MAX)
       else:
@@ -56,15 +56,15 @@ class CarController:
       can_sends.append(create_lka_msg(self.packer))
 
       if self.CP.carFingerprint in CANFD_CARS:
-        # TODO: extended mode
+        # TODO: وضع موسع
         mode = 1 if CC.latActive else 0
         counter = self.frame // CarControllerParams.STEER_STEP
         can_sends.append(create_lat_ctl2_msg(self.packer, mode, 0., 0., -apply_curvature, 0., counter))
       else:
         can_sends.append(create_lat_ctl_msg(self.packer, CC.latActive, 0., 0., -apply_curvature, 0.))
 
-    ### longitudinal control ###
-    # send acc command at 50Hz
+    ### التحكم الطولي ###
+    # إرسال أمر مثبت السرعة (ACC) بسرعة 50 هرتز
     if self.CP.openpilotLongitudinalControl and (self.frame % CarControllerParams.ACC_CONTROL_STEP) == 0:
       accel = clip(actuators.accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 
@@ -78,14 +78,14 @@ class CarController:
 
       can_sends.append(create_acc_command(self.packer, CC.longActive, gas, accel, precharge_brake, decel))
 
-    ### ui ###
+    ### واجهة المستخدم ###
     send_ui = (self.main_on_last != main_on) or (self.lkas_enabled_last != CC.latActive) or (self.steer_alert_last != steer_alert)
 
-    # send lkas ui command at 1Hz or if ui state changes
+    # إرسال أمر واجهة LKAS بسرعة 1 هرتز أو إذا تغيرت حالة الواجهة
     if (self.frame % CarControllerParams.LKAS_UI_STEP) == 0 or send_ui:
       can_sends.append(create_lkas_ui_msg(self.packer, main_on, CC.latActive, steer_alert, hud_control, CS.lkas_status_stock_values))
 
-    # send acc ui command at 20Hz or if ui state changes
+    # إرسال أمر واجهة ACC بسرعة 20 هرتز أو إذا تغيرت حالة الواجهة
     if (self.frame % CarControllerParams.ACC_UI_STEP) == 0 or send_ui:
       can_sends.append(create_acc_ui_msg(self.packer, main_on, CC.latActive, hud_control, CS.acc_tja_status_stock_values))
 

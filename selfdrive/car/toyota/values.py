@@ -15,23 +15,23 @@ PEDAL_TRANSITION = 10. * CV.MPH_TO_MS
 
 
 class CarControllerParams:
-  ACCEL_MAX = 1.5  # m/s2, lower than allowed 2.0 m/s2 for tuning reasons
-  ACCEL_MIN = -3.5  # m/s2
+  ACCEL_MAX = 1.5  # م/ث^2، أقل من 2.0 م/ث^2 المسموح بها لأسباب تتعلق بالضبط
+  ACCEL_MIN = -3.5  # م/ث^2
 
   STEER_STEP = 1
   STEER_MAX = 1500
-  STEER_ERROR_MAX = 350     # max delta between torque cmd and torque motor
+  STEER_ERROR_MAX = 350     # أقصى فرق بين أمر عزم الدوران وعزم دوران المحرك
 
   def __init__(self, CP):
     self.update(CP.lateralTuning.which)
 
   def update(self, tune):
     if tune == 'torque':
-      self.STEER_DELTA_UP = 15       # 1.0s time to peak torque
-      self.STEER_DELTA_DOWN = 25     # always lower than 45 otherwise the Rav4 faults (Prius seems ok with 50)
+      self.STEER_DELTA_UP = 15       # 1.0 ثانية للوصول إلى عزم الدوران الأقصى
+      self.STEER_DELTA_DOWN = 25     # دائمًا أقل من 45 وإلا تتعطل Rav4 (يبدو أن Prius لا بأس بها مع 50)
     else:
-      self.STEER_DELTA_UP = 10       # 1.5s time to peak torque
-      self.STEER_DELTA_DOWN = 25     # always lower than 45 otherwise the Rav4 faults (Prius seems ok with 50)
+      self.STEER_DELTA_UP = 10       # 1.5 ثانية للوصول إلى عزم الدوران الأقصى
+      self.STEER_DELTA_DOWN = 25     # دائمًا أقل من 45 وإلا تتعطل Rav4 (يبدو أن Prius لا بأس بها مع 50)
 
 
 class ToyotaFlags(IntFlag):
@@ -96,7 +96,7 @@ class CAR:
 
 class Footnote(Enum):
   CAMRY = CarFootnote(
-    "openpilot operates above 28mph for Camry 4CYL L, 4CYL LE and 4CYL SE which don't have Full-Speed Range Dynamic Radar Cruise Control.",
+    "يعمل القائد الآلي بسرعات تزيد عن 28 ميل/ساعة لسيارات Camry 4CYL L و 4CYL LE و 4CYL SE التي لا تحتوي على نظام التحكم بالرادار الديناميكي للسرعات الكاملة."
     Column.FSR_LONGITUDINAL)
 
 
@@ -239,9 +239,9 @@ FW_QUERY_CONFIG = FwQueryConfig(
     ),
   ],
   non_essential_ecus={
-    # FIXME: On some models, abs can sometimes be missing
+    # FIXME: في بعض الطرازات، يمكن أن تكون وحدة ABS مفقودة أحيانًا
     Ecu.abs: [CAR.RAV4, CAR.COROLLA, CAR.HIGHLANDER, CAR.SIENNA, CAR.LEXUS_IS],
-    # On some models, the engine can show on two different addresses
+    # في بعض الطرازات، قد يظهر المحرك على عنوانين مختلفين
     Ecu.engine: [CAR.CAMRY, CAR.COROLLA_TSS2, CAR.CHR, CAR.CHR_TSS2, CAR.LEXUS_IS, CAR.LEXUS_RC],
   }
 )
@@ -2169,28 +2169,28 @@ DBC = {
   CAR.ALPHARDH_TSS2: dbc_dict('toyota_nodsu_pt_generated', 'toyota_tss2_adas'),
 }
 
-# These cars have non-standard EPS torque scale factors. All others are 73
+# هذه السيارات لديها عوامل مقياس عزم دوران EPS غير قياسية. جميع السيارات الأخرى لديها 73
 EPS_SCALE = defaultdict(lambda: 73, {CAR.PRIUS: 66, CAR.COROLLA: 88, CAR.LEXUS_IS: 77, CAR.LEXUS_RC: 77, CAR.LEXUS_CTH: 100, CAR.PRIUS_V: 100})
 
-# Toyota/Lexus Safety Sense 2.0 and 2.5
+# نظام السلامة Toyota/Lexus Safety Sense 2.0 و 2.5
 TSS2_CAR = {CAR.RAV4_TSS2, CAR.RAV4_TSS2_2022, CAR.RAV4_TSS2_2023, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2, CAR.LEXUS_ES_TSS2, CAR.LEXUS_ESH_TSS2, CAR.RAV4H_TSS2, CAR.RAV4H_TSS2_2022,
             CAR.RAV4H_TSS2_2023, CAR.LEXUS_RX_TSS2, CAR.LEXUS_RXH_TSS2, CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2, CAR.PRIUS_TSS2, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2,
             CAR.MIRAI, CAR.LEXUS_NX_TSS2, CAR.LEXUS_NXH_TSS2, CAR.ALPHARD_TSS2, CAR.AVALON_TSS2, CAR.AVALONH_TSS2, CAR.ALPHARDH_TSS2, CAR.CHR_TSS2, CAR.CHRH_TSS2}
 
 NO_DSU_CAR = TSS2_CAR | {CAR.CHR, CAR.CHRH, CAR.CAMRY, CAR.CAMRYH}
 
-# the DSU uses the AEB message for longitudinal on these cars
+# يستخدم DSU رسالة AEB للتحكم الطولي في هذه السيارات
 UNSUPPORTED_DSU_CAR = {CAR.LEXUS_IS, CAR.LEXUS_RC}
 
-# these cars have a radar which sends ACC messages instead of the camera
+# هذه السيارات لديها رادار يرسل رسائل ACC بدلاً من الكاميرا
 RADAR_ACC_CAR = {CAR.RAV4H_TSS2_2022, CAR.RAV4_TSS2_2022, CAR.RAV4H_TSS2_2023, CAR.RAV4_TSS2_2023, CAR.CHR_TSS2, CAR.CHRH_TSS2}
 
-# these cars use the Lane Tracing Assist (LTA) message for lateral control
+# هذه السيارات تستخدم رسالة Lane Tracing Assist (LTA) للتحكم الجانبي
 ANGLE_CONTROL_CAR = {CAR.RAV4H_TSS2_2023, CAR.RAV4_TSS2_2023}
 
 EV_HYBRID_CAR = {CAR.AVALONH_2019, CAR.AVALONH_TSS2, CAR.CAMRYH, CAR.CAMRYH_TSS2, CAR.CHRH, CAR.CHRH_TSS2, CAR.COROLLAH_TSS2, CAR.HIGHLANDERH, CAR.HIGHLANDERH_TSS2, CAR.PRIUS,
                  CAR.PRIUS_V, CAR.RAV4H, CAR.RAV4H_TSS2, CAR.RAV4H_TSS2_2022, CAR.RAV4H_TSS2_2023, CAR.LEXUS_CTH, CAR.MIRAI, CAR.LEXUS_ESH, CAR.LEXUS_ESH_TSS2, CAR.LEXUS_NXH, CAR.LEXUS_RXH,
                  CAR.LEXUS_RXH_TSS2, CAR.LEXUS_NXH_TSS2, CAR.PRIUS_TSS2, CAR.ALPHARDH_TSS2}
 
-# no resume button press required
+# لا يتطلب الضغط على زر استئناف
 NO_STOP_TIMER_CAR = TSS2_CAR | {CAR.PRIUS_V, CAR.RAV4H, CAR.HIGHLANDERH, CAR.HIGHLANDER, CAR.SIENNA, CAR.LEXUS_ESH}

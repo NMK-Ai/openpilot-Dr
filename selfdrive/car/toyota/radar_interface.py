@@ -9,7 +9,7 @@ def _create_radar_can_parser(car_fingerprint):
   if DBC[car_fingerprint]['radar'] is None:
     return None
 
-  if car_fingerprint in TSS2_CAR:
+  إذا كانت بصمة السيارة في TSS2_CAR:
     RADAR_A_MSGS = list(range(0x180, 0x190))
     RADAR_B_MSGS = list(range(0x190, 0x1a0))
   else:
@@ -33,7 +33,7 @@ class RadarInterface(RadarInterfaceBase):
     self.track_id = 0
     self.radar_ts = CP.radarTimeStep
 
-    if CP.carFingerprint in TSS2_CAR:
+    إذا كانت بصمة السيارة في TSS2_CAR:
       self.RADAR_A_MSGS = list(range(0x180, 0x190))
       self.RADAR_B_MSGS = list(range(0x190, 0x1a0))
     else:
@@ -46,8 +46,8 @@ class RadarInterface(RadarInterfaceBase):
     self.trigger_msg = self.RADAR_B_MSGS[-1]
     self.updated_messages = set()
 
-    # No radar dbc for cars without DSU which are not TSS 2.0
-    # TODO: make a adas dbc file for dsu-less models
+    # لا يوجد ملف DBC للرادار للسيارات بدون DSU والتي ليست TSS 2.0
+    # TODO: إنشاء ملف DBC لأنظمة ADAS للنماذج التي لا تحتوي على DSU
     self.no_radar = CP.carFingerprint in NO_DSU_CAR and CP.carFingerprint not in TSS2_CAR
 
   def update(self, can_strings):
@@ -77,7 +77,7 @@ class RadarInterface(RadarInterfaceBase):
         cpt = self.rcp.vl[ii]
 
         if cpt['LONG_DIST'] >= 255 or cpt['NEW_TRACK']:
-          self.valid_cnt[ii] = 0    # reset counter
+          self.valid_cnt[ii] = 0    # إعادة تعيين العداد
         if cpt['VALID'] and cpt['LONG_DIST'] < 255:
           self.valid_cnt[ii] += 1
         else:
@@ -86,14 +86,14 @@ class RadarInterface(RadarInterfaceBase):
         score = self.rcp.vl[ii+16]['SCORE']
         # print ii, self.valid_cnt[ii], score, cpt['VALID'], cpt['LONG_DIST'], cpt['LAT_DIST']
 
-        # radar point only valid if it's a valid measurement and score is above 50
+        # نقطة الرادار تكون صالحة فقط إذا كانت القياسات صالحة وكانت النتيجة أعلى من 50
         if cpt['VALID'] or (score > 50 and cpt['LONG_DIST'] < 255 and self.valid_cnt[ii] > 0):
           if ii not in self.pts or cpt['NEW_TRACK']:
             self.pts[ii] = car.RadarData.RadarPoint.new_message()
             self.pts[ii].trackId = self.track_id
             self.track_id += 1
-          self.pts[ii].dRel = cpt['LONG_DIST']  # from front of car
-          self.pts[ii].yRel = -cpt['LAT_DIST']  # in car frame's y axis, left is positive
+          self.pts[ii].dRel = cpt['LONG_DIST']  # من مقدمة السيارة
+          self.pts[ii].yRel = -cpt['LAT_DIST']  # في محور y الخاص بإطار السيارة، اليسار هو الموجب
           self.pts[ii].vRel = cpt['REL_SPEED']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')

@@ -36,9 +36,9 @@ class CarState(CarStateBase):
     self.cluster_speed_hyst_gap = CV.KPH_TO_MS / 2.
     self.cluster_min_speed = CV.KPH_TO_MS / 2.
 
-    # On cars with cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE"]
-    # the signal is zeroed to where the steering angle is at start.
-    # Need to apply an offset as soon as the steering angle measurements are both received
+    # في السيارات التي تحتوي على cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE"]
+    # يتم تصفير الإشارة إلى المكان الذي تكون فيه زاوية التوجيه عند البدء.
+    # تحتاج إلى تطبيق تعويض بمجرد استلام قياسات زاوية التوجيه.
     self.accurate_steer_angle_seen = False
     self.angle_offset = FirstOrderFilter(None, 60.0, DT_CTRL, initialized=False)
     self._init_traffic_signals()
@@ -47,7 +47,7 @@ class CarState(CarStateBase):
     self.acc_type = 1
     self.lkas_hud = {}
 
-    #dp
+    # dp
     self.dp_sig_check = False
     self.dp_sig_sport_on_seen = True
     self.dp_sig_econ_on_seen = True
@@ -81,7 +81,7 @@ class CarState(CarStateBase):
       ret.gas = (cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS"] + cp.vl["GAS_SENSOR"]["INTERCEPTOR_GAS2"]) // 2
       ret.gasPressed = ret.gas > 805
     else:
-      # TODO: find a new, common signal
+      # TODO: ابحث عن إشارة جديدة ومشتركة
       msg = "GAS_PEDAL_HYBRID" if (self.CP.flags & ToyotaFlags.HYBRID) else "GAS_PEDAL"
       ret.gas = cp.vl[msg]["GAS_PEDAL"]
       ret.gasPressed = cp.vl["PCM_CRUISE"]["GAS_RELEASED"] == 0
@@ -94,19 +94,19 @@ class CarState(CarStateBase):
     )
     ret.vEgoRaw = mean([ret.wheelSpeeds.fl, ret.wheelSpeeds.fr, ret.wheelSpeeds.rl, ret.wheelSpeeds.rr])
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
-    ret.vEgoCluster = ret.vEgo * 1.015  # minimum of all the cars
+    ret.vEgoCluster = ret.vEgo * 1.015  # الحد الأدنى لجميع السيارات
 
     ret.standstill = ret.vEgoRaw == 0
 
     ret.steeringAngleDeg = cp.vl["STEER_ANGLE_SENSOR"]["STEER_ANGLE"] + cp.vl["STEER_ANGLE_SENSOR"]["STEER_FRACTION"]
     torque_sensor_angle_deg = cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE"]
 
-    # On some cars, the angle measurement is non-zero while initializing
+    # في بعض السيارات، تكون قياسات الزاوية غير صفرية أثناء التهيئة
     if abs(torque_sensor_angle_deg) > 1e-3 and not bool(cp.vl["STEER_TORQUE_SENSOR"]["STEER_ANGLE_INITIALIZING"]):
       self.accurate_steer_angle_seen = True
 
     if self.accurate_steer_angle_seen:
-      # Offset seems to be invalid for large steering angles
+      # يبدو أن التعويض غير صحيح عند زوايا التوجيه الكبيرة
       if abs(ret.steeringAngleDeg) < 90 and cp.can_valid:
         self.angle_offset.update(torque_sensor_angle_deg - ret.steeringAngleDeg)
 
@@ -114,20 +114,20 @@ class CarState(CarStateBase):
         ret.steeringAngleOffsetDeg = self.angle_offset.x
         ret.steeringAngleDeg = torque_sensor_angle_deg - self.angle_offset.x
 
-    # dp - toyota zss
+    # dp - تويوتا zss
     if self.dp_toyota_zss:
       zorro_steer = cp.vl["SECONDARY_STEER_ANGLE"]["ZORRO_STEER"]
-      # only compute zss offset when acc is active
+      # حساب تعويض zss فقط عندما يكون نظام التحكم في السرعة (ACC) مفعلًا
       if bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"]) and not self.dp_zss_cruise_active_last:
-        self.dp_zss_compute = True # cruise was just activated, so allow offset to be recomputed
+        self.dp_zss_compute = True # تم تفعيل نظام التحكم في السرعة للتو، لذا السماح بإعادة حساب التعويض
       self.dp_zss_cruise_active_last = bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"])
 
-      # compute zss offset
+      # حساب تعويض zss
       if self.dp_zss_compute:
         if abs(ret.steeringAngleDeg) > 1e-3 and abs(zorro_steer) > 1e-3:
           self.dp_toyota_zss = False
           self.dp_zss_angle_offset = zorro_steer - ret.steeringAngleDeg
-      # apply offset
+      # تطبيق التعويض
       ret.steeringAngleDeg = zorro_steer - self.dp_zss_angle_offset
 
     ret.steeringRateDeg = cp.vl["STEER_ANGLE_SENSOR"]["STEER_RATE"]
@@ -135,10 +135,10 @@ class CarState(CarStateBase):
     can_gear = int(cp.vl["GEAR_PACKET"]["GEAR"])
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
 
-    #dp: Thank you Arne (acceleration)
+    # dp: شكرًا لـ Arne (التسارع)
     if self.dp_toyota_ap_btn_link:
-      sport_on_sig = 'SPORT_ON_2' if self.CP.carFingerprint in (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2, CAR.HIGHLANDER_TSS2) else 'SPORT_ON'
-      # check signal once
+      sport_on_sig = 'SPORT_ON_2' إذا كانت بصمة السيارة في (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2, CAR.HIGHLANDER_TSS2) وإلا 'SPORT_ON'
+      # فحص الإشارة مرة واحدة
       if not self.dp_sig_check:
         self.dp_sig_check = True
         # sport on
@@ -164,21 +164,21 @@ class CarState(CarStateBase):
       elif econ_on == 1:
         self.dp_accel_profile = DP_ACCEL_ECO
 
-      # if init is false, we sync profile with whatever mode we have on car
+      # إذا كانت القيمة الأولية خاطئة، نقوم بمزامنة الملف التعريفي مع أي وضع لدينا في السيارة
       if not self.dp_accel_profile_init or self.dp_accel_profile != self.dp_accel_profile_prev:
         put_nonblocking('dp_accel_profile', str(self.dp_accel_profile))
         put_nonblocking('dp_last_modified',str(floor(time.time())))
         self.dp_accel_profile_init = True
       self.dp_accel_profile_prev = self.dp_accel_profile
 
-    # distance button
+    # زر المسافة
 
-    #dp: Thank you Arne (distance button)
+    # dp: شكرًا لـ Arne (زر المسافة)
     if self.dp_toyota_fp_btn_link:
       if not self.read_distance_lines_init or self.read_distance_lines != cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']:
         self.read_distance_lines_init = True
         self.read_distance_lines = cp.vl["PCM_CRUISE_SM"]['DISTANCE_LINES']
-        put_nonblocking('dp_following_profile', str(int(max(self.read_distance_lines - 1, 0)))) # Skipping one profile toyota mid is weird.
+        put_nonblocking('dp_following_profile', str(int(max(self.read_distance_lines - 1, 0)))) # تجاوز ملف واحد لأن الوضع الأوسط في تويوتا غريب.
         put_nonblocking('dp_last_modified',str(floor(time.time())))
 
     if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
@@ -186,7 +186,7 @@ class CarState(CarStateBase):
     elif self.CP.carFingerprint in [CAR.PRIUS, CAR.RAV4H, CAR.RAV4, CAR.HIGHLANDER]:
       self.distance = cp.vl["SDSU"]['FD_BUTTON']
 
-    #dp
+    # dp
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
 
     ret.leftBlinker = cp.vl["BLINKERS_STATE"]["TURN_SIGNALS"] == 1
@@ -194,17 +194,17 @@ class CarState(CarStateBase):
 
     ret.steeringTorque = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_DRIVER"]
     ret.steeringTorqueEps = cp.vl["STEER_TORQUE_SENSOR"]["STEER_TORQUE_EPS"] * self.eps_torque_scale
-    # we could use the override bit from dbc, but it's triggered at too high torque values
+    # يمكننا استخدام البت من ملف dbc، لكن يتم تفعيله عند قيم عزم دوران عالية جدًا
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
-    # steer rate fault: goes to 21 or 25 for 1 frame, then 9 for 2 seconds
-    # lka msg drop out: goes to 9 then 11 for a combined total of 2 seconds
+    # خطأ في معدل التوجيه: تصل القيمة إلى 21 أو 25 لإطار واحد، ثم 9 لمدة ثانيتين
+    # فقدان رسالة lka: تصل القيمة إلى 9 ثم 11 لمدة إجمالية مشتركة تبلغ ثانيتين
     ret.steerFaultTemporary = cp.vl["EPS_STATUS"]["LKA_STATE"] in (0, 9, 11, 21, 25)
-    # 17 is a fault from a prolonged high torque delta between cmd and user
-    # 3 is a fault from the lka command message not being received by the EPS
+    # 17 هو خطأ ناتج عن فرق عزم دوران مرتفع مطول بين الأمر والمستخدم
+    # 3 هو خطأ ناتج عن عدم استلام رسالة أمر lka من EPS
     ret.steerFaultPermanent = cp.vl["EPS_STATUS"]["LKA_STATE"] in (3, 17)
 
     if self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:
-      # TODO: find the bit likely in DSU_CRUISE that describes an ACC fault. one may also exist in CLUTCH
+      # TODO: ابحث عن البت المحتمل في DSU_CRUISE الذي يصف خطأ ACC. قد يكون هناك أيضًا بت في CLUTCH
       ret.cruiseState.available = cp.vl["DSU_CRUISE"]["MAIN_ON"] != 0
       ret.cruiseState.speed = cp.vl["DSU_CRUISE"]["SET_SPEED"] * CV.KPH_TO_MS
       cluster_set_speed = cp.vl["PCM_CRUISE_ALT"]["UI_SET_SPEED"]
@@ -214,29 +214,29 @@ class CarState(CarStateBase):
       ret.cruiseState.speed = cp.vl["PCM_CRUISE_2"]["SET_SPEED"] * CV.KPH_TO_MS
       cluster_set_speed = cp.vl["PCM_CRUISE_SM"]["UI_SET_SPEED"]
 
-    # UI_SET_SPEED is always non-zero when main is on, hide until first enable
+    # UI_SET_SPEED دائمًا غير صفري عندما يكون نظام التحكم في السرعة الرئيسي مفعلًا، يتم إخفاؤه حتى التفعيل الأول
     if ret.cruiseState.speed != 0:
       is_metric = cp.vl["BODY_CONTROL_STATE_2"]["UNITS"] in (1, 2)
       conversion_factor = CV.KPH_TO_MS if is_metric else CV.MPH_TO_MS
       ret.cruiseState.speedCluster = cluster_set_speed * conversion_factor
 
-    cp_acc = cp_cam if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR) else cp
+    cp_acc = cp_cam إذا كانت بصمة السيارة ضمن (TSS2_CAR - RADAR_ACC_CAR) وإلا cp
 
-    if self.CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR):
+    إذا كانت بصمة السيارة ضمن (TSS2_CAR | RADAR_ACC_CAR):
       self.acc_type = cp_acc.vl["ACC_CONTROL"]["ACC_TYPE"]
       ret.stockFcw = bool(cp_acc.vl["ACC_HUD"]["FCW"])
 
-    # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
-    # these cars are identified by an ACC_TYPE value of 2.
-    # TODO: it is possible to avoid the lockout and gain stop and go if you
-    # send your own ACC_CONTROL msg on startup with ACC_TYPE set to 1
-    if (self.CP.carFingerprint not in TSS2_CAR and self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR) or \
-       (self.CP.carFingerprint in TSS2_CAR and self.acc_type == 1):
+    # بعض سيارات TSS2 لديها قفل السرعة المنخفضة مفعل بشكل دائم، لذا يتم تجاهله في هذه السيارات
+    # يتم تحديد هذه السيارات بقيمة ACC_TYPE تساوي 2.
+    # TODO: من الممكن تجنب القفل واكتساب ميزة التوقف والانطلاق إذا قمت
+    # بإرسال رسالة ACC_CONTROL خاصة بك عند بدء التشغيل مع تعيين ACC_TYPE إلى 1
+    إذا كانت بصمة السيارة ليست ضمن TSS2_CAR أو UNSUPPORTED_DSU_CAR أو \
+       كانت بصمة السيارة ضمن TSS2_CAR وكان acc_type يساوي 1:
       self.low_speed_lockout = cp.vl["PCM_CRUISE_2"]["LOW_SPEED_LOCKOUT"] == 2
 
     self.pcm_acc_status = cp.vl["PCM_CRUISE"]["CRUISE_STATE"]
-    if self.CP.carFingerprint not in (NO_STOP_TIMER_CAR - TSS2_CAR):
-      # ignore standstill state in certain vehicles, since pcm allows to restart with just an acceleration request
+    إذا لم تكن بصمة السيارة ضمن (NO_STOP_TIMER_CAR - TSS2_CAR):
+      # تجاهل حالة التوقف التام في بعض السيارات، لأن PCM يسمح بإعادة التشغيل بمجرد طلب التسارع
       ret.cruiseState.standstill = self.pcm_acc_status == 7
     ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]["CRUISE_ACTIVE"])
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]["CRUISE_STATE"] in (1, 2, 3, 4, 5, 6)
@@ -271,7 +271,7 @@ class CarState(CarStateBase):
     self._splsgn4 = None
 
   def _update_traffic_signals(self, cp_cam):
-    # Print out car signals for traffic signal detection
+    # طباعة إشارات السيارة لاكتشاف إشارات المرور
     tsgn1 = cp_cam.vl["RSA1"]['TSGN1']
     spdval1 = cp_cam.vl["RSA1"]['SPDVAL1']
     splsgn1 = cp_cam.vl["RSA1"]['SPLSGN1']
@@ -340,60 +340,60 @@ class CarState(CarStateBase):
   @staticmethod
   def get_can_parser(CP):
     signals = [
-      # sig_name, sig_address
-      ("STEER_ANGLE", "STEER_ANGLE_SENSOR"),
-      ("GEAR", "GEAR_PACKET"),
-      ("BRAKE_PRESSED", "BRAKE_MODULE"),
-      ("WHEEL_SPEED_FL", "WHEEL_SPEEDS"),
-      ("WHEEL_SPEED_FR", "WHEEL_SPEEDS"),
-      ("WHEEL_SPEED_RL", "WHEEL_SPEEDS"),
-      ("WHEEL_SPEED_RR", "WHEEL_SPEEDS"),
-      ("DOOR_OPEN_FL", "BODY_CONTROL_STATE"),
-      ("DOOR_OPEN_FR", "BODY_CONTROL_STATE"),
-      ("DOOR_OPEN_RL", "BODY_CONTROL_STATE"),
-      ("DOOR_OPEN_RR", "BODY_CONTROL_STATE"),
-      ("SEATBELT_DRIVER_UNLATCHED", "BODY_CONTROL_STATE"),
-      ("PARKING_BRAKE", "BODY_CONTROL_STATE"),
-      ("UNITS", "BODY_CONTROL_STATE_2"),
-      ("TC_DISABLED", "ESP_CONTROL"),
-      #("BRAKE_HOLD_ACTIVE", "ESP_CONTROL"),
-      ("STEER_FRACTION", "STEER_ANGLE_SENSOR"),
-      ("STEER_RATE", "STEER_ANGLE_SENSOR"),
-      ("CRUISE_ACTIVE", "PCM_CRUISE"),
-      ("CRUISE_STATE", "PCM_CRUISE"),
-      ("GAS_RELEASED", "PCM_CRUISE"),
-      ("UI_SET_SPEED", "PCM_CRUISE_SM"),
-      ("STEER_TORQUE_DRIVER", "STEER_TORQUE_SENSOR"),
-      ("STEER_TORQUE_EPS", "STEER_TORQUE_SENSOR"),
-      ("STEER_ANGLE", "STEER_TORQUE_SENSOR"),
-      ("STEER_ANGLE_INITIALIZING", "STEER_TORQUE_SENSOR"),
-      ("TURN_SIGNALS", "BLINKERS_STATE"),
-      ("LKA_STATE", "EPS_STATUS"),
-      ("AUTO_HIGH_BEAM", "LIGHT_STALK"),
-      #dp
-      ("SPORT_ON", "GEAR_PACKET"),
-      ("ECON_ON", "GEAR_PACKET"),
-      ("RPM", "ENGINE_RPM"),
-      ("BRAKE_LIGHTS_ACC", "ESP_CONTROL"),
-      ("DISTANCE_LINES", "PCM_CRUISE_SM"),
+      # اسم الإشارة، عنوان الإشارة
+      ("STEER_ANGLE", "STEER_ANGLE_SENSOR"),  # زاوية التوجيه
+      ("GEAR", "GEAR_PACKET"),  # ناقل الحركة
+      ("BRAKE_PRESSED", "BRAKE_MODULE"),  # الضغط على الفرامل
+      ("WHEEL_SPEED_FL", "WHEEL_SPEEDS"),  # سرعة العجلة الأمامية اليسرى
+      ("WHEEL_SPEED_FR", "WHEEL_SPEEDS"),  # سرعة العجلة الأمامية اليمنى
+      ("WHEEL_SPEED_RL", "WHEEL_SPEEDS"),  # سرعة العجلة الخلفية اليسرى
+      ("WHEEL_SPEED_RR", "WHEEL_SPEEDS"),  # سرعة العجلة الخلفية اليمنى
+      ("DOOR_OPEN_FL", "BODY_CONTROL_STATE"),  # الباب الأمامي الأيسر مفتوح
+      ("DOOR_OPEN_FR", "BODY_CONTROL_STATE"),  # الباب الأمامي الأيمن مفتوح
+      ("DOOR_OPEN_RL", "BODY_CONTROL_STATE"),  # الباب الخلفي الأيسر مفتوح
+      ("DOOR_OPEN_RR", "BODY_CONTROL_STATE"),  # الباب الخلفي الأيمن مفتوح
+      ("SEATBELT_DRIVER_UNLATCHED", "BODY_CONTROL_STATE"),  # حزام الأمان للسائق غير مربوط
+      ("PARKING_BRAKE", "BODY_CONTROL_STATE"),  # فرامل اليد
+      ("UNITS", "BODY_CONTROL_STATE_2"),  # الوحدات (القياسات المترية أو الإمبراطورية)
+      ("TC_DISABLED", "ESP_CONTROL"),  # تعطيل التحكم في الجر
+      #("BRAKE_HOLD_ACTIVE", "ESP_CONTROL"),  # تثبيت الفرامل مفعل
+      ("STEER_FRACTION", "STEER_ANGLE_SENSOR"),  # تجزئة التوجيه
+      ("STEER_RATE", "STEER_ANGLE_SENSOR"),  # معدل التوجيه
+      ("CRUISE_ACTIVE", "PCM_CRUISE"),  # نظام تثبيت السرعة مفعل
+      ("CRUISE_STATE", "PCM_CRUISE"),  # حالة نظام تثبيت السرعة
+      ("GAS_RELEASED", "PCM_CRUISE"),  # تحرير دواسة الوقود
+      ("UI_SET_SPEED", "PCM_CRUISE_SM"),  # سرعة نظام تثبيت السرعة في واجهة المستخدم
+      ("STEER_TORQUE_DRIVER", "STEER_TORQUE_SENSOR"),  # عزم دوران التوجيه للسائق
+      ("STEER_TORQUE_EPS", "STEER_TORQUE_SENSOR"),  # عزم دوران التوجيه لنظام EPS
+      ("STEER_ANGLE", "STEER_TORQUE_SENSOR"),  # زاوية التوجيه
+      ("STEER_ANGLE_INITIALIZING", "STEER_TORQUE_SENSOR"),  # تهيئة زاوية التوجيه
+      ("TURN_SIGNALS", "BLINKERS_STATE"),  # إشارات الانعطاف
+      ("LKA_STATE", "EPS_STATUS"),  # حالة نظام المساعدة في الحفاظ على المسار (LKA)
+      ("AUTO_HIGH_BEAM", "LIGHT_STALK"),  # الضوء العالي التلقائي
+      # dp
+      ("SPORT_ON", "GEAR_PACKET"),  # وضع الرياضة مفعل
+      ("ECON_ON", "GEAR_PACKET"),  # وضع الاقتصاد مفعل
+      ("RPM", "ENGINE_RPM"),  # عدد دورات المحرك في الدقيقة
+      ("BRAKE_LIGHTS_ACC", "ESP_CONTROL"),  # أضواء الفرامل الخاصة بنظام ACC
+      ("DISTANCE_LINES", "PCM_CRUISE_SM"),  # خطوط المسافة
     ]
 
     checks = [
-      ("GEAR_PACKET", 1),
-      ("LIGHT_STALK", 1),
-      ("BLINKERS_STATE", 0.15),
-      ("BODY_CONTROL_STATE", 3),
-      ("BODY_CONTROL_STATE_2", 2),
-      ("ESP_CONTROL", 3),
-      ("EPS_STATUS", 25),
-      ("BRAKE_MODULE", 40),
-      ("WHEEL_SPEEDS", 80),
-      ("STEER_ANGLE_SENSOR", 80),
-      ("PCM_CRUISE", 33),
-      ("PCM_CRUISE_SM", 1),
-      ("STEER_TORQUE_SENSOR", 50),
-      #dp
-      ("ENGINE_RPM", 100),
+      ("GEAR_PACKET", 1),  # حزمة ناقل الحركة
+      ("LIGHT_STALK", 1),  # ذراع الأضواء
+      ("BLINKERS_STATE", 0.15),  # حالة إشارات الانعطاف
+      ("BODY_CONTROL_STATE", 3),  # حالة التحكم بالجسم
+      ("BODY_CONTROL_STATE_2", 2),  # حالة التحكم بالجسم 2
+      ("ESP_CONTROL", 3),  # التحكم في الثبات الإلكتروني
+      ("EPS_STATUS", 25),  # حالة نظام التوجيه المعزز إلكترونيًا (EPS)
+      ("BRAKE_MODULE", 40),  # وحدة الفرامل
+      ("WHEEL_SPEEDS", 80),  # سرعات العجلات
+      ("STEER_ANGLE_SENSOR", 80),  # مستشعر زاوية التوجيه
+      ("PCM_CRUISE", 33),  # نظام تثبيت السرعة PCM
+      ("PCM_CRUISE_SM", 1),  # PCM تثبيت السرعة SM
+      ("STEER_TORQUE_SENSOR", 50),  # مستشعر عزم دوران التوجيه
+      # dp
+      ("ENGINE_RPM", 100),  # عدد دورات المحرك في الدقيقة
     ]
 
     if CP.flags & ToyotaFlags.HYBRID:
@@ -404,8 +404,8 @@ class CarState(CarStateBase):
       checks.append(("GAS_PEDAL", 33))
     #arne
     if CP.carFingerprint in [CAR.PRIUS, CAR.RAV4H, CAR.RAV4, CAR.HIGHLANDER]:
-      signals.append(("FD_BUTTON", "SDSU", 0))
-    #dp acceleration
+      signals.append(("FD_BUTTON", "SDSU", 0))  # زر FD
+    # dp التسارع
     if CP.carFingerprint in (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2, CAR.HIGHLANDER_TSS2):
       signals.append(("SPORT_ON_2", "GEAR_PACKET"))
 
@@ -426,7 +426,7 @@ class CarState(CarStateBase):
       signals.append(("LOW_SPEED_LOCKOUT", "PCM_CRUISE_2"))
       checks.append(("PCM_CRUISE_2", 33))
 
-    # add gas interceptor reading if we are using it
+    # إضافة قراءة جهاز اعتراض الغاز إذا كنا نستخدمه
     if CP.enableGasInterceptor:
       signals.append(("INTERCEPTOR_GAS", "GAS_SENSOR"))
       signals.append(("INTERCEPTOR_GAS2", "GAS_SENSOR"))
@@ -460,7 +460,7 @@ class CarState(CarStateBase):
         ("PRE_COLLISION", 33),
       ]
 
-    # dp - add zss signal check
+    # dp - إضافة فحص إشارة zss
     if Params().get_bool('dp_toyota_zss'):
       signals += [("ZORRO_STEER", "SECONDARY_STEER_ANGLE", 0)]
       checks += [("SECONDARY_STEER_ANGLE", 0)]
@@ -469,7 +469,7 @@ class CarState(CarStateBase):
 
   @staticmethod
   def get_cam_can_parser(CP):
-    # Include traffic signal, single
+    # تضمين إشارة المرور، فردية
     signals = [
       ("TSGN1", "RSA1", 0),
       ("SPDVAL1", "RSA1", 0),
@@ -482,7 +482,7 @@ class CarState(CarStateBase):
       ("SPLSGN4", "RSA2", 0),
     ]
 
-    # use steering message to check if panda is connected to frc
+    # استخدام رسالة التوجيه للتحقق مما إذا كان الباندا متصلاً بـ FRC
     checks = [
       ("RSA1", 0),
       ("RSA2", 0),

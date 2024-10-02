@@ -12,8 +12,8 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "chrysler"
     ret.dashcamOnly = candidate in RAM_HD
 
-    # radar parsing needs some work, see https://github.com/commaai/openpilot/issues/26842
-    ret.radarUnavailable = True # DBC[candidate]['radar'] is None
+    # تحليل الرادار يحتاج إلى بعض العمل، راجع https://github.com/commaai/openpilot/issues/26842
+    ret.radarUnavailable = True # DBC[candidate]['radar'] غير موجود
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.4
 
@@ -24,27 +24,27 @@ class CarInterface(CarInterfaceBase):
     elif candidate in RAM_DT:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_CHRYSLER_RAM_DT
 
-    ret.minSteerSpeed = 3.8  # m/s
+    ret.minSteerSpeed = 3.8  # م/ث
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
     if candidate not in RAM_CARS:
-      # Newer FW versions standard on the following platforms, or flashed by a dealer onto older platforms have a higher minimum steering speed.
+      # الإصدارات الأحدث من البرمجيات الثابتة (FW) القياسية على المنصات التالية، أو التي يتم تحديثها بواسطة الوكيل على المنصات الأقدم، لديها سرعة توجيه دنيا أعلى.
       new_eps_platform = candidate in (CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2020, CAR.JEEP_CHEROKEE_2019)
       new_eps_firmware = any(fw.ecu == 'eps' and fw.fwVersion[:4] >= b"6841" for fw in car_fw)
       if new_eps_platform or new_eps_firmware:
         ret.flags |= ChryslerFlags.HIGHER_MIN_STEERING_SPEED.value
 
-    # Chrysler
+    # كرايسلر
     if candidate in (CAR.PACIFICA_2017_HYBRID, CAR.PACIFICA_2018, CAR.PACIFICA_2018_HYBRID, CAR.PACIFICA_2019_HYBRID, CAR.PACIFICA_2020):
       ret.mass = 2242. + STD_CARGO_KG
       ret.wheelbase = 3.089
-      ret.steerRatio = 16.2  # Pacifica Hybrid 2017
+      ret.steerRatio = 16.2  # باسيفيكا هايبرد 2017
 
       ret.lateralTuning.init('pid')
       ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kiBP = [[9., 20.], [9., 20.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.30], [0.03, 0.05]]
       ret.lateralTuning.pid.kf = 0.00006
 
-    # Jeep
+    # جيب
     elif candidate in (CAR.JEEP_CHEROKEE, CAR.JEEP_CHEROKEE_2019):
       ret.mass = 1778 + STD_CARGO_KG
       ret.wheelbase = 2.71
@@ -56,14 +56,14 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.30], [0.03, 0.05]]
       ret.lateralTuning.pid.kf = 0.00006
 
-    # Ram
+    # رام
     elif candidate == CAR.RAM_1500:
       ret.steerActuatorDelay = 0.2
       ret.wheelbase = 3.88
       ret.steerRatio = 16.3
       ret.mass = 2493. + STD_CARGO_KG
       ret.minSteerSpeed = 14.5
-      # Older EPS FW allow steer to zero
+      # الإصدارات الأقدم من برمجيات EPS تسمح بالتوجيه إلى الصفر
       if any(fw.ecu == 'eps' and fw.fwVersion[:4] <= b"6831" for fw in car_fw):
         ret.minSteerSpeed = 0.
 
@@ -82,8 +82,8 @@ class CarInterface(CarInterfaceBase):
     CarInterfaceBase.configure_dp_tune(ret.lateralTuning, ret.latTuneCollection)
 
     if ret.flags & ChryslerFlags.HIGHER_MIN_STEERING_SPEED:
-      # TODO: allow these cars to steer down to 13 m/s if already engaged.
-      ret.minSteerSpeed = 17.5  # m/s 17 on the way up, 13 on the way down once engaged.
+      # TODO: السماح لهذه السيارات بالتوجيه حتى 13 م/ث إذا كانت مفعلة بالفعل.
+      ret.minSteerSpeed = 17.5  # م/ث، 17 عند الصعود، و13 عند النزول بعد التفعيل.
 
     ret.centerToFront = ret.wheelbase * 0.44
     ret.enableBsm = 720 in fingerprint[0]
@@ -93,10 +93,10 @@ class CarInterface(CarInterfaceBase):
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
 
-    # events
+    # الأحداث
     events = self.create_common_events(ret, extra_gears=[car.CarState.GearShifter.low])
 
-    # Low speed steer alert hysteresis logic
+    # منطق الهيسترسيس لتنبيه التوجيه عند السرعات المنخفضة
     if self.CP.minSteerSpeed > 0. and ret.vEgo < (self.CP.minSteerSpeed + 0.5):
       self.low_speed_alert = True
     elif ret.vEgo > (self.CP.minSteerSpeed + 1.):

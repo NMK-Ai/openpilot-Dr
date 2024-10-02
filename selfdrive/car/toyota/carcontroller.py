@@ -13,11 +13,11 @@ from common.params import Params
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
-# EPS faults if you apply torque while the steering rate is above 100 deg/s for too long
-MAX_STEER_RATE = 100  # deg/s
-MAX_STEER_RATE_FRAMES = 18  # tx control frames needed before torque can be cut
+# تحدث أخطاء EPS إذا قمت بتطبيق عزم دوران بينما تكون سرعة التوجيه أعلى من 100 درجة/ثانية لفترة طويلة
+MAX_STEER_RATE = 100  # الحد الأقصى لمعدل التوجيه بالدرجات/ثانية
+MAX_STEER_RATE_FRAMES = 18  # عدد إطارات التحكم المطلوبة قبل أن يتم قطع عزم الدوران
 
-# EPS allows user torque above threshold for 50 frames before permanently faulting
+# يسمح نظام EPS بعزم دوران المستخدم فوق العتبة لمدة 50 إطارًا قبل حدوث خطأ دائم
 MAX_USER_TORQUE = 500
 
 GearShifter = car.CarState.GearShifter
@@ -68,17 +68,17 @@ class CarController:
     pcm_cancel_cmd = CC.cruiseControl.cancel
     lat_active = CC.latActive and abs(CS.out.steeringTorque) < MAX_USER_TORQUE
 
-    # gas and brake
+    # دواسة الوقود والفرامل
     if self.CP.enableGasInterceptor and CC.longActive:
       MAX_INTERCEPTOR_GAS = 0.5
-      # RAV4 has very sensitive gas pedal
+      # دواسة الوقود في سيارة RAV4 حساسة للغاية
       if self.CP.carFingerprint in (CAR.RAV4, CAR.RAV4H, CAR.HIGHLANDER, CAR.HIGHLANDERH):
         PEDAL_SCALE = interp(CS.out.vEgo, [0.0, MIN_ACC_SPEED, MIN_ACC_SPEED + PEDAL_TRANSITION], [0.15, 0.3, 0.0])
       elif self.CP.carFingerprint in (CAR.COROLLA,):
         PEDAL_SCALE = interp(CS.out.vEgo, [0.0, MIN_ACC_SPEED, MIN_ACC_SPEED + PEDAL_TRANSITION], [0.3, 0.4, 0.0])
       else:
         PEDAL_SCALE = interp(CS.out.vEgo, [0.0, MIN_ACC_SPEED, MIN_ACC_SPEED + PEDAL_TRANSITION], [0.4, 0.5, 0.0])
-      # offset for creep and windbrake
+      # تعويض للحركة البطيئة وفرملة الرياح
       pedal_offset = interp(CS.out.vEgo, [0.0, 2.3, MIN_ACC_SPEED + PEDAL_TRANSITION], [-.4, 0.0, 0.2])
       pedal_command = PEDAL_SCALE * (actuators.accel + pedal_offset)
       interceptor_gas_cmd = clip(pedal_command, 0., MAX_INTERCEPTOR_GAS)
@@ -86,11 +86,11 @@ class CarController:
       interceptor_gas_cmd = 0.
     pcm_accel_cmd = clip(actuators.accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
 
-    # steer torque
+    # عزم دوران التوجيه
     new_steer = int(round(actuators.steer * CarControllerParams.STEER_MAX))
     apply_steer = apply_meas_steer_torque_limits(new_steer, self.last_steer, CS.out.steeringTorqueEps, self.torque_rate_limits)
 
-    # Count up to MAX_STEER_RATE_FRAMES, at which point we need to cut torque to avoid a steering fault
+    # العد حتى MAX_STEER_RATE_FRAMES، وفي هذه المرحلة نحتاج إلى قطع عزم الدوران لتجنب حدوث خطأ في التوجيه
     if lat_active and abs(CS.out.steeringRateDeg) >= MAX_STEER_RATE:
       self.steer_rate_counter += 1
     else:
@@ -104,21 +104,21 @@ class CarController:
       apply_steer_req = 0
       self.steer_rate_counter = 0
 
-    # Never actuate with LKA on cars that only support LTA
+    # لا تقم بتفعيل التوجيه مع نظام LKA في السيارات التي تدعم فقط نظام LTA
     if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
       apply_steer = 0
       apply_steer_req = 0
 
-    # TODO: probably can delete this. CS.pcm_acc_status uses a different signal
-    # than CS.cruiseState.enabled. confirm they're not meaningfully different
+    # TODO: من المحتمل أنه يمكن حذف هذا. يستخدم CS.pcm_acc_status إشارة مختلفة
+    # عن CS.cruiseState.enabled. تأكد من أنها ليست مختلفة بشكل كبير
     if not CC.enabled and CS.pcm_acc_status:
       pcm_cancel_cmd = 1
 
-    # on entering standstill, send standstill request
+    # عند الدخول في حالة التوقف التام، أرسل طلب التوقف التام
     if CS.out.standstill and not self.last_standstill and (self.CP.carFingerprint not in NO_STOP_TIMER_CAR or self.CP.enableGasInterceptor):
       self.standstill_req = True
     if CS.pcm_acc_status != 8:
-      # pcm entered standstill or it's disabled
+      # دخل نظام PCM في حالة التوقف التام أو تم تعطيله
       self.standstill_req = False
     self.standstill_req = False if self.dp_toyota_sng else self.standstill_req
 
@@ -127,8 +127,8 @@ class CarController:
 
     can_sends = []
 
-    # dp - door auto lock / unlock logic
-    # thanks to AlexandreSato & cydia2020
+    # dp - منطق القفل / الفتح التلقائي للأبواب
+    # شكرًا لـ AlexandreSato و cydia2020
     # https://github.com/AlexandreSato/animalpilot/blob/personal/doors.py
     if self.dp_toyota_auto_lock or self.dp_toyota_auto_unlock:
       gear = CS.out.gearShifter
@@ -142,26 +142,24 @@ class CarController:
         self.lock_once = True
       self.last_gear = gear
 
-    # *** control msgs ***
+    # *** رسائل التحكم ***
     # print("steer {0} {1} {2} {3}".format(apply_steer, min_lim, max_lim, CS.steer_torque_motor)
 
-    # toyota can trace shows this message at 42Hz, with counter adding alternatively 1 and 2;
-    # sending it at 100Hz seem to allow a higher rate limit, as the rate limit seems imposed
-    # on consecutive messages
+    # تتبع CAN في سيارات تويوتا يظهر هذه الرسالة بتردد 42 هرتز، مع إضافة العداد بالتناوب 1 و 2؛
+    # إرسالها بتردد 100 هرتز يبدو أنه يسمح بحد أعلى للتردد، حيث يبدو أن الحد الأقصى يتم فرضه
+    # على الرسائل المتتالية
     can_sends.append(create_steer_command(self.packer, apply_steer, apply_steer_req))
     if self.frame % 2 == 0 and self.CP.carFingerprint in TSS2_CAR:
       can_sends.append(create_lta_steer_command(self.packer, 0, 0, self.frame // 2))
 
-    # LTA mode. Set ret.steerControlType = car.CarParams.SteerControlType.angle and whitelist 0x191 in the panda
-    # if self.frame % 2 == 0:
+    # وضع LTA. قم بتعيين ret.steerControlType = car.CarParams.SteerControlType.angle وإضافة 0x191 إلى القائمة البيضاء في جهاز الباندا
+    # إذا كانت قيمة self.frame % 2 == 0:
     #   can_sends.append(create_steer_command(self.packer, 0, 0, self.frame // 2))
     #   can_sends.append(create_lta_steer_command(self.packer, actuators.steeringAngleDeg, apply_steer_req, self.frame // 2))
-
-    # we can spam can to cancel the system even if we are using lat only control
     if (self.frame % 3 == 0 and self.CP.openpilotLongitudinalControl) or pcm_cancel_cmd:
       lead = hud_control.leadVisible or CS.out.vEgo < 12.  # at low speed we always assume the lead is present so ACC can be engaged
 
-      # Lexus IS uses a different cancellation message
+      # تستخدم سيارة لكزس IS رسالة إلغاء مختلفة
       if pcm_cancel_cmd and self.CP.carFingerprint in UNSUPPORTED_DSU_CAR:
         can_sends.append(create_acc_cancel_command(self.packer))
       elif self.CP.openpilotLongitudinalControl:
@@ -171,15 +169,15 @@ class CarController:
         can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead, CS.acc_type, CS.distance, self.dp_toyota_change5speed))
 
     if self.frame % 2 == 0 and self.CP.enableGasInterceptor and self.CP.openpilotLongitudinalControl:
-      # send exactly zero if gas cmd is zero. Interceptor will send the max between read value and gas cmd.
-      # This prevents unexpected pedal range rescaling
+      # أرسل قيمة صفرية تمامًا إذا كانت قيمة أمر دواسة الوقود صفرًا. سيقوم جهاز Interceptor بإرسال القيمة القصوى بين القيمة المقروءة وأمر دواسة الوقود.
+      # هذا يمنع إعادة ضبط غير متوقعة لنطاق الدواسة
       can_sends.append(create_gas_interceptor_command(self.packer, interceptor_gas_cmd, self.frame // 2))
       self.gas = interceptor_gas_cmd
 
     if self.CP.carFingerprint != CAR.PRIUS_V:
-      # ui mesg is at 1Hz but we send asap if:
-      # - there is something to display
-      # - there is something to stop displaying
+      # رسالة واجهة المستخدم تكون بتردد 1 هرتز، لكن نرسلها فورًا إذا:
+      # - هناك شيء لعرضه
+      # - هناك شيء للتوقف عن عرضه
       fcw_alert = hud_control.visualAlert == VisualAlert.fcw
       steer_alert = hud_control.visualAlert in (VisualAlert.steerRequired, VisualAlert.ldw)
 
@@ -189,7 +187,7 @@ class CarController:
         send_ui = True
         self.alert_active = not self.alert_active
       elif pcm_cancel_cmd:
-        # forcing the pcm to disengage causes a bad fault sound so play a good sound instead
+        # إجبار PCM على فك الارتباط يتسبب في إصدار صوت خطأ سيئ، لذا قم بتشغيل صوت جيد بدلاً من ذلك
         send_ui = True
 
       if self.frame % 20 == 0 or send_ui:
@@ -200,7 +198,7 @@ class CarController:
       if (self.frame % 100 == 0 or send_ui) and self.CP.enableDsu:
         can_sends.append(create_fcw_command(self.packer, fcw_alert))
 
-    # *** static msgs ***
+    # *** رسائل ثابتة ***
     for addr, cars, bus, fr_step, vl in STATIC_DSU_MSGS:
       if self.frame % fr_step == 0 and self.CP.enableDsu and self.CP.carFingerprint in cars:
         can_sends.append(make_can_msg(addr, vl, bus))

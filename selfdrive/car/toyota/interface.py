@@ -22,7 +22,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.toyota)]
     ret.safetyConfigs[0].safetyParam = EPS_SCALE[candidate]
 
-    # BRAKE_MODULE is on a different address for these cars
+    # وحدة الفرامل على عنوان مختلف لهذه السيارات
     if DBC[candidate]["pt"] == "toyota_new_mc_pt_generated":
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_ALT_BRAKE
 
@@ -33,9 +33,9 @@ class CarInterface(CarInterfaceBase):
     else:
       CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
-    ret.steerActuatorDelay = 0.12  # Default delay, Prius has larger delay
+    ret.steerActuatorDelay = 0.12  # تأخير افتراضي، سيارات بريوس لديها تأخير أكبر
     ret.steerLimitTimer = 0.4
-    ret.stoppingControl = False  # Toyota starts braking more when it thinks you want to stop
+    ret.stoppingControl = False  # تبدأ تويوتا في الفرملة أكثر عندما تعتقد أنك تريد التوقف
 
     stop_and_go = False
 
@@ -43,10 +43,10 @@ class CarInterface(CarInterfaceBase):
     if candidate == CAR.PRIUS:
       stop_and_go = True
       ret.wheelbase = 2.70
-      ret.steerRatio = 15.74   # unknown end-to-end spec
-      tire_stiffness_factor = 0.6371   # hand-tune
+      ret.steerRatio = 15.74   # المواصفات من الطرف إلى الطرف غير معروفة
+      tire_stiffness_factor = 0.6371   # تم ضبطه يدويًا
       ret.mass = 3045. * CV.LB_TO_KG + STD_CARGO_KG
-      # Only give steer angle deadzone to for bad angle sensor prius
+      # إعطاء زاوية التوجيه منطقة ميتة فقط لأجهزة استشعار الزاوية السيئة في سيارات بريوس
       if params.get_bool("dp_toyota_prius_bad_angle_tune"):
         ret.steerActuatorDelay = 0.25
         CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning, steering_angle_deadzone_deg=0.2)
@@ -66,23 +66,23 @@ class CarInterface(CarInterfaceBase):
     elif candidate in (CAR.RAV4, CAR.RAV4H):
       stop_and_go = True if (candidate in CAR.RAV4H) else False
       ret.wheelbase = 2.65
-      ret.steerRatio = 16.88   # 14.5 is spec end-to-end
+      ret.steerRatio = 16.88   # المواصفات هي 14.5 من الطرف إلى الطرف
       tire_stiffness_factor = 0.5533
-      ret.mass = 3650. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      ret.mass = 3650. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين العادية والهجينة
 
     elif candidate == CAR.COROLLA:
       ret.wheelbase = 2.70
       ret.steerRatio = 18.27
-      tire_stiffness_factor = 0.444  # not optimized yet
-      ret.mass = 2860. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      tire_stiffness_factor = 0.444  # لم يتم تحسينه بعد
+      ret.mass = 2860. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين العادية والهجينة
 
     elif candidate in (CAR.LEXUS_RX, CAR.LEXUS_RXH, CAR.LEXUS_RX_TSS2, CAR.LEXUS_RXH_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.79
-      ret.steerRatio = 16.  # 14.8 is spec end-to-end
+      ret.steerRatio = 16.  # المواصفات هي 14.8 من الطرف إلى الطرف
       ret.wheelSpeedFactor = 1.035
       tire_stiffness_factor = 0.5533
-      ret.mass = 4481. * CV.LB_TO_KG + STD_CARGO_KG  # mean between min and max
+      ret.mass = 4481. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين الحد الأدنى والأقصى
 
     elif candidate in (CAR.CHR, CAR.CHRH, CAR.CHR_TSS2, CAR.CHRH_TSS2):
       stop_and_go = True
@@ -96,23 +96,23 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.82448
       ret.steerRatio = 13.7
       tire_stiffness_factor = 0.7933
-      ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين العادية والهجينة
 
     elif candidate in (CAR.HIGHLANDER, CAR.HIGHLANDERH, CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2):
       stop_and_go = True
-      ret.wheelbase = 2.8194  # average of 109.8 and 112.2 in
+      ret.wheelbase = 2.8194  # متوسط بين 109.8 و 112.2 بوصة
       ret.steerRatio = 16.0
       tire_stiffness_factor = 0.8
-      ret.mass = 4516. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      ret.mass = 4516. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين العادية والهجينة
 
     elif candidate in (CAR.AVALON, CAR.AVALON_2019, CAR.AVALONH_2019, CAR.AVALON_TSS2, CAR.AVALONH_TSS2):
-      # starting from 2019, all Avalon variants have stop and go
+      # ابتداءً من 2019، جميع نسخ أفالون تدعم نظام التوقف والانطلاق
       # https://engage.toyota.com/static/images/toyota_safety_sense/TSS_Applicability_Chart.pdf
       stop_and_go = candidate != CAR.AVALON
       ret.wheelbase = 2.82
-      ret.steerRatio = 14.8  # Found at https://pressroom.toyota.com/releases/2016+avalon+product+specs.download
+      ret.steerRatio = 14.8  # تم العثور عليها في https://pressroom.toyota.com/releases/2016+avalon+product+specs.download
       tire_stiffness_factor = 0.7983
-      ret.mass = 3505. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      ret.mass = 3505. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين العادية والهجينة
 
     elif candidate in (CAR.RAV4_TSS2, CAR.RAV4_TSS2_2022, CAR.RAV4H_TSS2, CAR.RAV4H_TSS2_2022,
                        CAR.RAV4_TSS2_2023, CAR.RAV4H_TSS2_2023):
@@ -120,7 +120,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.68986
       ret.steerRatio = 14.3
       tire_stiffness_factor = 0.7933
-      ret.mass = 3585. * CV.LB_TO_KG + STD_CARGO_KG  # Average between ICE and Hybrid
+      ret.mass = 3585. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين البنزين والهجين
       ret.lateralTuning.init('pid')
       ret.lateralTuning.pid.kiBP = [0.0]
       ret.lateralTuning.pid.kpBP = [0.0]
@@ -128,8 +128,8 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiV = [0.1]
       ret.lateralTuning.pid.kf = 0.00007818594
 
-      # 2019+ RAV4 TSS2 uses two different steering racks and specific tuning seems to be necessary.
-      # See https://github.com/commaai/openpilot/pull/21429#issuecomment-873652891
+      # سيارات RAV4 TSS2 من 2019+ تستخدم نظامي توجيه مختلفين وتحتاج إلى ضبط محدد.
+      # انظر https://github.com/commaai/openpilot/pull/21429#issuecomment-873652891
       for fw in car_fw:
         if fw.ecu == "eps" and (fw.fwVersion.startswith(b'\x02') or fw.fwVersion in [b'8965B42181\x00\x00\x00\x00\x00\x00']):
           ret.lateralTuning.pid.kpV = [0.15]
@@ -139,17 +139,17 @@ class CarInterface(CarInterfaceBase):
 
     elif candidate in (CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2):
       stop_and_go = True
-      ret.wheelbase = 2.67  # Average between 2.70 for sedan and 2.64 for hatchback
+      ret.wheelbase = 2.67  # متوسط بين 2.70 للصالون و 2.64 للهاتشباك
       ret.steerRatio = 13.9
-      tire_stiffness_factor = 0.444  # not optimized yet
+      tire_stiffness_factor = 0.444  # لم يتم تحسينه بعد
       ret.mass = 3060. * CV.LB_TO_KG + STD_CARGO_KG
 
     elif candidate in (CAR.LEXUS_ES_TSS2, CAR.LEXUS_ESH_TSS2, CAR.LEXUS_ESH):
       stop_and_go = True
       ret.wheelbase = 2.8702
-      ret.steerRatio = 16.0  # not optimized
-      tire_stiffness_factor = 0.444  # not optimized yet
-      ret.mass = 3677. * CV.LB_TO_KG + STD_CARGO_KG  # mean between min and max
+      ret.steerRatio = 16.0  # لم يتم تحسينه بعد
+      tire_stiffness_factor = 0.444  # لم يتم تحسينه بعد
+      ret.mass = 3677. * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين الحد الأدنى والأقصى
 
     elif candidate == CAR.SIENNA:
       stop_and_go = True
@@ -169,20 +169,20 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.60
       ret.steerRatio = 18.6
       tire_stiffness_factor = 0.517
-      ret.mass = 3108 * CV.LB_TO_KG + STD_CARGO_KG  # mean between min and max
+      ret.mass = 3108 * CV.LB_TO_KG + STD_CARGO_KG  # متوسط بين الحد الأدنى والأقصى
 
     elif candidate in (CAR.LEXUS_NX, CAR.LEXUS_NXH, CAR.LEXUS_NX_TSS2, CAR.LEXUS_NXH_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.66
       ret.steerRatio = 14.7
-      tire_stiffness_factor = 0.444  # not optimized yet
+      tire_stiffness_factor = 0.444  # لم يتم تحسينه بعد
       ret.mass = 4070 * CV.LB_TO_KG + STD_CARGO_KG
 
     elif candidate == CAR.PRIUS_TSS2:
       stop_and_go = True
-      ret.wheelbase = 2.70002  # from toyota online sepc.
-      ret.steerRatio = 13.4   # True steerRatio from older prius
-      tire_stiffness_factor = 0.6371   # hand-tune
+      ret.wheelbase = 2.70002  # من المواصفات على الإنترنت لتويوتا.
+      ret.steerRatio = 13.4   # نسبة التوجيه الفعلية من بريوس القديمة
+      tire_stiffness_factor = 0.6371   # تم ضبطه يدويًا
       ret.mass = 3115. * CV.LB_TO_KG + STD_CARGO_KG
 
     elif candidate == CAR.MIRAI:
@@ -204,19 +204,19 @@ class CarInterface(CarInterfaceBase):
 
     ret.centerToFront = ret.wheelbase * 0.44
 
-    # TODO: start from empirically derived lateral slip stiffness for the civic and scale by
-    # mass and CG position, so all cars will have approximately similar dyn behaviors
+    # TODO: ابدأ من الصلابة العرضية للإطارات المستمدة تجريبيًا لسيارة سيفيك واضبطها وفقًا
+    # للوزن وموضع مركز الجاذبية، بحيث يكون لجميع السيارات سلوكيات ديناميكية متشابهة تقريبًا
     ret.tireStiffnessFront, ret.tireStiffnessRear = scale_tire_stiffness(ret.mass, ret.wheelbase, ret.centerToFront,
                                                                          tire_stiffness_factor=tire_stiffness_factor)
 
     ret.enableBsm = 0x3F6 in fingerprint[0] and candidate in TSS2_CAR
-    # Detect smartDSU, which intercepts ACC_CMD from the DSU allowing openpilot to send it
+    # اكتشاف smartDSU، الذي يعترض ACC_CMD من DSU مما يسمح لـ openpilot بإرساله
     smartDsu = 0x2FF in fingerprint[0]
-    # In TSS2 cars the camera does long control
+    # في سيارات TSS2، تقوم الكاميرا بالتحكم الطولي
     found_ecus = [fw.ecu for fw in car_fw]
     ret.enableDsu = len(found_ecus) > 0 and Ecu.dsu not in found_ecus and candidate not in (NO_DSU_CAR | UNSUPPORTED_DSU_CAR) and not smartDsu
     ret.enableGasInterceptor = 0x201 in fingerprint[0]
-    # if the smartDSU is detected, openpilot can send ACC_CMD (and the smartDSU will block it from the DSU) or not (the DSU is "connected")
+    # إذا تم اكتشاف smartDSU، يمكن لـ openpilot إرسال ACC_CMD (وسيقوم smartDSU بحظره من DSU) أو لا (سيظل DSU "متصلًا")
     ret.openpilotLongitudinalControl = smartDsu or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR)
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
 
@@ -229,34 +229,33 @@ class CarInterface(CarInterfaceBase):
     if not ret.openpilotLongitudinalControl:
       ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_STOCK_LONGITUDINAL
 
-    # we can't use the fingerprint to detect this reliably, since
-    # the EV gas pedal signal can take a couple seconds to appear
+    # لا يمكننا استخدام البصمة لاكتشاف هذا بشكل موثوق، لأن إشارة دواسة الوقود للسيارات الكهربائية يمكن أن تستغرق بضع ثوانٍ للظهور
     if candidate in EV_HYBRID_CAR:
       ret.flags |= ToyotaFlags.HYBRID.value
 
-    # min speed to enable ACC. if car can do stop and go, then set enabling speed
-    # to a negative value, so it won't matter.
-    ret.minEnableSpeed = -1. if (stop_and_go or ret.enableGasInterceptor) else MIN_ACC_SPEED
+    # الحد الأدنى للسرعة لتفعيل ACC. إذا كانت السيارة تدعم التوقف والانطلاق، فقم بتعيين سرعة التفعيل
+    # إلى قيمة سالبة، لذلك لن تهم.
+    ret.minEnableSpeed = -1. إذا كانت (stop_and_go أو ret.enableGasInterceptor) وإلا MIN_ACC_SPEED
 
     tune = ret.longitudinalTuning
     tune.deadzoneBP = [0., 9.]
     tune.deadzoneV = [.0, .15]
-    if candidate in TSS2_CAR or ret.enableGasInterceptor:
+    إذا كانت السيارة مرشحة ضمن TSS2_CAR أو ret.enableGasInterceptor:
       tune.kpBP = [0., 5., 20.]
       tune.kpV = [1.3, 1.0, 0.7]
       tune.kiBP = [0., 3., 4., 5., 12., 20., 23., 40.]
       tune.kiV = [.08, .16, .26, .215, .20, .166, .1, .006]
-      if candidate in TSS2_CAR:
-        #ret.vEgoStopping = 0.3  # car is near 0.1 to 0.2 when car starts requesting stopping accel
-        ret.vEgoStarting = 0.1 # needs to be > or == vEgoStopping
-        #ret.stopAccel = -0.1  # Toyota requests -0.4 when stopped
-        ret.stoppingDecelRate = 0.04  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
-        #ret.longitudinalActuatorDelayLowerBound = 0.3
-        #ret.longitudinalActuatorDelayUpperBound = 0.3
-        ### stock ###
-        #ret.vEgoStopping = 0.25
-        #ret.vEgoStarting = 0.25
-        #ret.stoppingDecelRate = 0.3  # reach stopping target smoothly
+      إذا كانت السيارة مرشحة ضمن TSS2_CAR:
+        # ret.vEgoStopping = 0.3  # السيارة تكون بين 0.1 إلى 0.2 عندما تبدأ السيارة في طلب التسارع المتوقف
+        ret.vEgoStarting = 0.1  # يجب أن تكون أكبر أو تساوي vEgoStopping
+        # ret.stopAccel = -0.1  # تطلب تويوتا -0.4 عند التوقف
+        ret.stoppingDecelRate = 0.04  # الوصول إلى هدف التوقف بسلاسة - يبدو أن الأمر يستغرق 0.5 ثانية للانتقال من 0 إلى -0.4
+        # ret.longitudinalActuatorDelayLowerBound = 0.3
+        # ret.longitudinalActuatorDelayUpperBound = 0.3
+        ### الافتراضي ###
+        # ret.vEgoStopping = 0.25
+        # ret.vEgoStarting = 0.25
+        # ret.stoppingDecelRate = 0.3  # الوصول إلى هدف التوقف بسلاسة
     else:
       tune.kpBP = [0., 5., 35.]
       tune.kiBP = [0., 35.]
@@ -265,32 +264,32 @@ class CarInterface(CarInterfaceBase):
 
     return ret
 
-  # returns a car.CarState
+  # يعيد car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
 
-    # events
+    # الأحداث
     events = self.create_common_events(ret)
 
-    if self.CP.openpilotLongitudinalControl:
-      if ret.cruiseState.standstill and not ret.brakePressed and not self.CP.enableGasInterceptor:
+    إذا كان التحكم الطولي في openpilot مفعلًا في هذا السيارة:
+      إذا كان ret.cruiseState.standstill ولم يتم الضغط على الفرامل ولم يتم تفعيل جهاز اعتراض الوقود:
         events.add(EventName.resumeRequired)
-      if self.CS.low_speed_lockout:
+      إذا كانت self.CS.low_speed_lockout:
         events.add(EventName.lowSpeedLockout)
-      if ret.vEgo < self.CP.minEnableSpeed:
+      إذا كانت سرعة ret.vEgo أقل من الحد الأدنى للسرعة للتفعيل:
         events.add(EventName.belowEngageSpeed)
-        if c.actuators.accel > 0.3:
-          # some margin on the actuator to not false trigger cancellation while stopping
+        إذا كان تسارع c.actuators.accel أكبر من 0.3:
+          # بعض الهامش على المحرك لتجنب التفعيل الزائف للإلغاء أثناء التوقف
           events.add(EventName.speedTooLow)
-        if ret.vEgo < 0.001:
-          # while in standstill, send a user alert
+        إذا كانت سرعة ret.vEgo أقل من 0.001:
+          # أثناء التوقف التام، يتم إرسال تنبيه للمستخدم
           events.add(EventName.manualRestart)
 
     ret.events = events.to_msg()
 
     return ret
 
-  # pass in a car.CarControl
-  # to be called @ 100hz
+  # تمرير car.CarControl
+  # يتم استدعاؤه @ 100Hz
   def apply(self, c, now_nanos):
     return self.CC.update(c, self.CS, now_nanos, self.dragonconf)
