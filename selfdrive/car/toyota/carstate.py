@@ -137,7 +137,7 @@ class CarState(CarStateBase):
 
     # dp: شكرًا لـ Arne (التسارع)
     if self.dp_toyota_ap_btn_link:
-      sport_on_sig = 'SPORT_ON_2' إذا كانت بصمة السيارة في (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2, CAR.HIGHLANDER_TSS2) وإلا 'SPORT_ON'
+      sport_on_sig = 'SPORT_ON_2' if self.CP.carFingerprint in (CAR.RAV4_TSS2, CAR.LEXUS_ES_TSS2, CAR.HIGHLANDER_TSS2) else 'SPORT_ON'
       # فحص الإشارة مرة واحدة
       if not self.dp_sig_check:
         self.dp_sig_check = True
@@ -230,8 +230,8 @@ class CarState(CarStateBase):
     # يتم تحديد هذه السيارات بقيمة ACC_TYPE تساوي 2.
     # TODO: من الممكن تجنب القفل واكتساب ميزة التوقف والانطلاق إذا قمت
     # بإرسال رسالة ACC_CONTROL خاصة بك عند بدء التشغيل مع تعيين ACC_TYPE إلى 1
-    إذا كانت بصمة السيارة ليست ضمن TSS2_CAR أو UNSUPPORTED_DSU_CAR أو \
-       كانت بصمة السيارة ضمن TSS2_CAR وكان acc_type يساوي 1:
+    if (self.CP.carFingerprint not in TSS2_CAR and self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR) or \
+       (self.CP.carFingerprint in TSS2_CAR and self.acc_type == 1):
       self.low_speed_lockout = cp.vl["PCM_CRUISE_2"]["LOW_SPEED_LOCKOUT"] == 2
 
     self.pcm_acc_status = cp.vl["PCM_CRUISE"]["CRUISE_STATE"]
