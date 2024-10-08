@@ -16,7 +16,6 @@ MAX_ANGLE = 85
 MAX_ANGLE_FRAMES = 89
 MAX_ANGLE_CONSECUTIVE_FRAMES = 2
 
-
 def process_hud_alert(enabled, fingerprint, hud_control):
   sys_warning = (hud_control.visualAlert in (VisualAlert.steerRequired, VisualAlert.ldw))
 
@@ -40,6 +39,16 @@ def process_hud_alert(enabled, fingerprint, hud_control):
 
   return sys_warning, sys_state, left_lane_warning, right_lane_warning
 
+# دالة للتحكم في الفلشر
+def toggle_hazard_lights(turn_on):
+    can_sends = []
+    if turn_on:
+        # إرسال رسالة CAN لتشغيل الفلشر (استبدل 'hazard_lights' بالرسالة الصحيحة)
+        can_sends.append([0x123, 0, b'\x01', 0])  # مثال على رسالة CAN لتشغيل الفلشر
+    else:
+        # إرسال رسالة CAN لإطفاء الفلشر
+        can_sends.append([0x123, 0, b'\x00', 0])  # مثال على رسالة CAN لإطفاء الفلشر
+    return can_sends
 
 class CarController:
   def __init__(self, dbc_name, CP, VM):
@@ -73,10 +82,15 @@ class CarController:
     set_speed_in_units = hud_control.setSpeed * (CV.MS_TO_KPH if CS.is_metric else CV.MS_TO_MPH)
 
     # HUD messages
-    sys_warning, sys_state, left_lane_warning, right_lane_warning = process_hud_alert(CC.enabled, self.car_fingerprint,
-                                                                                      hud_control)
+    sys_warning, sys_state, left_lane_warning, right_lane_warning = process_hud_alert(CC.enabled, self.car_fingerprint, hud_control)
 
     can_sends = []
+
+    # *** منطق الفلشر ***
+    if CC.hazardLights:  # إذا تم اكتشاف حالة الطوارئ أو الشرط الذي ترغب فيه
+      can_sends += toggle_hazard_lights(True)  # تشغيل الفلشر
+    else:
+      can_sends += toggle_hazard_lights(False)  # إطفاء الفلشر
 
     # *** common hyundai stuff ***
 
@@ -87,10 +101,6 @@ class CarController:
       if self.CP.flags & HyundaiFlags.CANFD_HDA2.value:
         addr, bus = 0x730, 5
       can_sends.append([addr, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", bus])
-
-      # for blinkers
-      if self.CP.flags & HyundaiFlags.ENABLE_BLINKERS:
-        can_sends.append([0x7b1, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", 5])
 
     # >90 degree steering fault prevention
     # Count up to MAX_ANGLE_FRAMES, at which point we need to cut torque to avoid a steering fault
